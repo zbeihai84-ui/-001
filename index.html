@@ -2,9 +2,9 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>你适合生活在哪个城市？ | City Quiz</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>你适合生活在哪个城市？ | 海蓝蓝蓝</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #faf8f5;
@@ -14,190 +14,370 @@
   --accent: #c4733e;
   --accent2: #5b8c5a;
   --accent3: #4a7a9b;
-  --gold: #b8860b;
-  --progress: #d4945a;
+  --accent4: #b8860b;
+  --accent5: #9b59b6;
+  --warm: #e8a87c;
+  --soft: #f5ede0;
+  --gold: #d4a559;
+  --progress: linear-gradient(135deg, var(--accent2), var(--accent));
   --dim: rgba(0,0,0,0.04);
-  --shadow: 0 2px 16px rgba(0,0,0,0.06);
-  --radius: 16px;
-  --font: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', 'SimSun', '微软雅黑', serif;
+  --shadow: 0 2px 20px rgba(0,0,0,0.06);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.1);
+  --radius: 18px;
+  --radius-sm: 12px;
+  --font-serif: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', 'SimSun', serif;
+  --font-sans: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
 
+html { scroll-behavior: smooth; }
+
 body {
-  font-family: var(--font);
+  font-family: var(--font-sans);
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  line-height: 1.7;
+  line-height: 1.75;
   -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.container {
+.app-container {
   width: 100%;
-  max-width: 640px;
-  padding: 20px 20px 40px;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 16px 48px;
+  min-height: 100vh;
+  position: relative;
 }
 
-/* Progress */
+/* Progress Bar */
 .progress-wrap {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: linear-gradient(180deg, var(--bg) 80%, transparent);
-  padding: 12px 0 8px;
+  background: linear-gradient(180deg, var(--bg) 85%, transparent);
+  padding: 16px 0 12px;
 }
 .progress-bar {
-  height: 4px;
+  height: 5px;
   background: #e8e3db;
-  border-radius: 2px;
+  border-radius: 3px;
   overflow: hidden;
 }
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--accent2), var(--accent));
-  border-radius: 2px;
-  transition: width 0.4s ease;
+  background: var(--progress);
+  border-radius: 3px;
+  transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
   width: 0%;
 }
 .progress-text {
   font-size: 12px;
   color: var(--sub);
   text-align: right;
-  margin-top: 4px;
+  margin-top: 6px;
+  font-weight: 500;
 }
 
 /* Screens */
-.screen { display: none; }
+.screen { display: none; animation: fadeIn 0.4s ease; }
 .screen.active { display: block; }
 
-/* Start Screen */
-.start-screen {
-  text-align: center;
-  padding-top: 60px;
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-.start-icon {
-  font-size: 64px;
-  margin-bottom: 16px;
-  animation: float 3s ease-in-out infinite;
-}
+
 @keyframes float {
   0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
+  50% { transform: translateY(-10px); }
 }
-.start-screen h1 {
-  font-size: 32px;
-  font-weight: 900;
-  color: var(--text);
-  margin-bottom: 12px;
-  letter-spacing: 2px;
+
+@keyframes pulse {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
 }
-.start-screen .subtitle {
-  font-size: 16px;
-  color: var(--sub);
-  margin-bottom: 32px;
-  line-height: 1.6;
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
-.start-screen .meta {
-  display: flex;
-  justify-content: center;
-  gap: 24px;
-  margin-bottom: 32px;
-  font-size: 13px;
-  color: var(--sub);
+
+@keyframes wave {
+  0%,100% { transform: translateY(0); }
+  25% { transform: translateY(-4px); }
+  75% { transform: translateY(4px); }
 }
-.start-screen .meta span {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
+
+/* Buttons */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 14px 36px;
+  padding: 14px 32px;
   border: none;
   border-radius: 50px;
-  font-size: 17px;
-  font-family: var(--font);
+  font-size: 16px;
+  font-family: var(--font-sans);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.25s ease;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
+  -webkit-user-select: none;
+  user-select: none;
 }
 .btn-primary {
   background: linear-gradient(135deg, var(--accent), #d4844e);
   color: #fff;
   box-shadow: 0 4px 20px rgba(196,115,62,0.3);
 }
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(196,115,62,0.4);
+.btn-primary:active {
+  transform: scale(0.97);
+  box-shadow: 0 2px 10px rgba(196,115,62,0.3);
 }
-.btn-outline {
+.btn-secondary {
   background: var(--card);
   color: var(--accent);
   border: 2px solid var(--accent);
 }
-.btn-outline:hover {
+.btn-secondary:active {
   background: var(--accent);
   color: #fff;
 }
+.btn-ghost {
+  background: transparent;
+  color: var(--sub);
+  padding: 10px 20px;
+}
 .btn-sm {
-  padding: 8px 20px;
+  padding: 10px 22px;
   font-size: 14px;
 }
+.btn-block {
+  width: 100%;
+}
 
-/* Quiz Screen */
-.quiz-screen {
-  padding-top: 8px;
+/* ========== HOME PAGE ========== */
+.home-page {
+  padding-top: 40px;
+  text-align: center;
+}
+.home-hero {
+  position: relative;
+  margin-bottom: 32px;
+}
+.home-visual {
+  font-size: 88px;
+  margin-bottom: 16px;
+  animation: float 4s ease-in-out infinite;
+  filter: drop-shadow(0 8px 24px rgba(196,115,62,0.15));
+}
+.home-title {
+  font-family: var(--font-serif);
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--text);
+  margin-bottom: 12px;
+  letter-spacing: 3px;
+  line-height: 1.3;
+}
+.home-subtitle {
+  font-size: 15px;
+  color: var(--sub);
+  line-height: 1.8;
+  margin-bottom: 28px;
+  padding: 0 12px;
+}
+.home-meta {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 36px;
+  flex-wrap: wrap;
+}
+.home-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--sub);
+  background: var(--card);
+  padding: 8px 16px;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.home-brand {
+  position: absolute;
+  bottom: -20px;
+  right: 0;
+  font-size: 12px;
+  color: var(--sub);
+  opacity: 0.7;
+  font-style: italic;
+}
+.home-disclaimer {
+  font-size: 12px;
+  color: var(--sub);
+  opacity: 0.7;
+  margin-top: 24px;
+  padding: 0 24px;
+  line-height: 1.6;
+}
+
+/* City decoration cards */
+.city-preview {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 28px;
+}
+.city-preview-item {
+  aspect-ratio: 1;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  background: var(--card);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  animation: wave 2s ease-in-out infinite;
+}
+.city-preview-item:nth-child(2) { animation-delay: 0.2s; }
+.city-preview-item:nth-child(3) { animation-delay: 0.4s; }
+.city-preview-item:nth-child(4) { animation-delay: 0.6s; }
+
+/* ========== SUPPORT PAGE ========== */
+.support-page {
+  padding-top: 24px;
+}
+.support-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.support-header h2 {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.support-header p {
+  font-size: 14px;
+  color: var(--sub);
+}
+.support-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+}
+.support-card h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.support-card p, .support-card li {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.8;
+}
+.support-card ul {
+  padding-left: 18px;
+}
+.support-card li {
+  margin-bottom: 4px;
+}
+.dimensions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 8px;
+}
+.dim-tag {
+  background: var(--soft);
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+}
+.dim-tag strong {
+  display: block;
+  color: var(--accent);
+  margin-bottom: 2px;
+  font-size: 14px;
+}
+.dim-tag span {
+  font-size: 11px;
+  color: var(--sub);
+  line-height: 1.5;
+}
+.support-note {
+  background: linear-gradient(135deg, #fef9f3, #fdf3e8);
+  border-left: 3px solid var(--accent);
+  padding: 14px 16px;
+  border-radius: 0 12px 12px 0;
+  margin: 16px 0 24px;
+  font-size: 13px;
+  color: var(--sub);
+  line-height: 1.7;
+}
+
+/* ========== QUIZ PAGE ========== */
+.quiz-page {
+  padding-top: 4px;
 }
 .question-card {
   background: var(--card);
   border-radius: var(--radius);
-  padding: 28px 24px;
+  padding: 28px 22px;
   box-shadow: var(--shadow);
-  animation: fadeInUp 0.4s ease;
 }
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+.question-scene {
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: 500;
+  margin-bottom: 8px;
+  opacity: 0.8;
 }
 .question-num {
   font-size: 12px;
   color: var(--accent);
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 2px;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   text-transform: uppercase;
 }
 .question-text {
+  font-family: var(--font-serif);
   font-size: 20px;
   font-weight: 700;
-  margin-bottom: 24px;
-  line-height: 1.5;
+  margin-bottom: 28px;
+  line-height: 1.6;
   color: var(--text);
 }
 .options { display: flex; flex-direction: column; gap: 10px; }
 .option {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 14px;
   padding: 16px 18px;
   background: var(--dim);
   border: 2px solid transparent;
-  border-radius: 12px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   transition: all 0.2s ease;
   font-size: 15px;
   text-align: left;
+  line-height: 1.6;
 }
-.option:hover {
-  background: #f5ede0;
-  border-color: #e8d5c0;
+.option:active {
+  transform: scale(0.98);
 }
 .option.selected {
   background: #fdf3e8;
@@ -205,7 +385,7 @@ body {
   box-shadow: 0 0 0 3px rgba(196,115,62,0.1);
 }
 .option-letter {
-  width: 32px; height: 32px;
+  width: 30px; height: 30px;
   border-radius: 50%;
   background: #e8e3db;
   display: flex;
@@ -216,6 +396,7 @@ body {
   color: var(--sub);
   flex-shrink: 0;
   transition: all 0.2s ease;
+  margin-top: 1px;
 }
 .option.selected .option-letter {
   background: var(--accent);
@@ -228,145 +409,543 @@ body {
   gap: 12px;
 }
 
-/* Calculating */
-.calc-screen {
+/* ========== CALCULATING ========== */
+.calc-page {
   text-align: center;
-  padding-top: 80px;
+  padding-top: 100px;
 }
 .calc-anim {
-  font-size: 48px;
-  margin-bottom: 20px;
-  animation: spin 1.5s linear infinite;
-}
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  font-size: 64px;
+  margin-bottom: 24px;
+  animation: spin 2s linear infinite;
 }
 .calc-text {
   font-size: 18px;
   color: var(--sub);
+  font-family: var(--font-serif);
+}
+.calc-sub {
+  font-size: 13px;
+  color: var(--sub);
+  opacity: 0.7;
+  margin-top: 12px;
 }
 
-/* Result Screen */
-.result-screen {
-  animation: fadeInUp 0.6s ease;
+/* ========== REPORT PAGE ========== */
+.report-page {
+  padding-bottom: 40px;
 }
-.result-header {
+.report-hero {
   text-align: center;
-  margin-bottom: 24px;
+  padding: 32px 0 24px;
+  position: relative;
 }
-.result-city-emoji {
-  font-size: 72px;
+.lanlan-char {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 12px;
+  animation: float 4s ease-in-out infinite;
+}
+.city-emoji {
+  font-size: 80px;
   margin-bottom: 8px;
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,0.1));
 }
-.result-city-name {
-  font-size: 40px;
+.city-name {
+  font-family: var(--font-serif);
+  font-size: 44px;
   font-weight: 900;
-  letter-spacing: 4px;
-  margin-bottom: 4px;
+  letter-spacing: 6px;
+  margin-bottom: 6px;
 }
-.result-tagline {
-  font-size: 18px;
+.city-tagline {
+  font-size: 17px;
   color: var(--accent);
-  font-weight: 500;
+  font-weight: 600;
   margin-bottom: 16px;
 }
-.result-golden {
+.city-golden {
   display: inline-block;
   background: linear-gradient(135deg, #fef3e0, #fdebd0);
   border: 1px solid #e0c898;
   border-radius: 24px;
-  padding: 8px 20px;
-  font-size: 15px;
+  padding: 10px 24px;
+  font-size: 14px;
   color: var(--gold);
   font-weight: 600;
   font-style: italic;
   letter-spacing: 1px;
+  font-family: var(--font-serif);
+}
+.city-shareline {
+  margin-top: 16px;
+  font-size: 14px;
+  color: var(--sub);
+  padding: 0 20px;
+}
+.city-shareline span {
+  background: var(--soft);
+  padding: 2px 10px;
+  border-radius: 4px;
+  font-weight: 500;
 }
 
-.result-card {
+.report-section {
   background: var(--card);
   border-radius: var(--radius);
-  padding: 24px;
+  padding: 24px 20px;
+  margin-bottom: 14px;
   box-shadow: var(--shadow);
-  margin-bottom: 16px;
 }
-.result-card h3 {
-  font-size: 15px;
+.report-section h3 {
+  font-family: var(--font-serif);
+  font-size: 17px;
   font-weight: 700;
-  color: var(--accent);
-  margin-bottom: 10px;
-  letter-spacing: 1px;
+  color: var(--text);
+  margin-bottom: 14px;
   display: flex;
   align-items: center;
   gap: 8px;
 }
-.result-card p {
+.report-section h3 .section-icon {
+  font-size: 20px;
+}
+.report-section p {
   font-size: 15px;
   color: var(--text);
-  line-height: 1.8;
-}
-
-.radar-section {
-  background: var(--card);
-  border-radius: var(--radius);
-  padding: 20px;
-  box-shadow: var(--shadow);
-  margin-bottom: 16px;
-  text-align: center;
-}
-.radar-section h3 {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--accent);
-  margin-bottom: 4px;
-  letter-spacing: 1px;
-}
-.radar-section .radar-sub {
-  font-size: 12px;
-  color: var(--sub);
+  line-height: 1.9;
   margin-bottom: 12px;
 }
-.radar-section svg { max-width: 100%; height: auto; }
+.report-section p:last-child { margin-bottom: 0; }
 
-.result-actions {
+.keyword-tags {
   display: flex;
-  gap: 12px;
-  justify-content: center;
   flex-wrap: wrap;
+  gap: 8px;
   margin-top: 8px;
 }
+.keyword-tag {
+  background: linear-gradient(135deg, var(--soft), #faf0e4);
+  color: var(--accent);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
 
+/* Radar Chart */
+.radar-container {
+  text-align: center;
+  padding: 8px 0;
+}
+.radar-container svg { max-width: 100%; height: auto; }
+.radar-legend {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--sub);
+}
+.radar-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.radar-legend-line {
+  width: 24px;
+  height: 3px;
+  border-radius: 2px;
+}
+
+/* Dimension bars */
+.dim-bar-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.dim-bar-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.dim-bar-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+.dim-bar-name {
+  font-weight: 700;
+  color: var(--text);
+}
+.dim-bar-score {
+  font-weight: 700;
+  color: var(--accent);
+}
+.dim-bar-track {
+  height: 8px;
+  background: #e8e3db;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.dim-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 1s ease;
+}
+.dim-bar-desc {
+  font-size: 12px;
+  color: var(--sub);
+}
+
+/* Balance card */
+.balance-card {
+  background: linear-gradient(135deg, #fef9f3, #f8f4ee);
+  border-radius: var(--radius-sm);
+  padding: 18px;
+  margin-top: 12px;
+}
+.balance-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.balance-row:last-child { margin-bottom: 0; }
+.balance-side {
+  font-size: 13px;
+  line-height: 1.6;
+}
+.balance-side.strength { color: var(--accent2); }
+.balance-side.blind { color: #c06a5a; }
+.balance-divider {
+  width: 1px;
+  height: 40px;
+  background: #e0dbd2;
+  position: relative;
+}
+.balance-divider::after {
+  content: '⇋';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  background: #f8f4ee;
+  padding: 0 4px;
+  color: var(--sub);
+  font-size: 14px;
+}
+
+/* Action plan */
+.action-day {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px dashed #e8e3db;
+}
+.action-day:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+.action-day-num {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.action-day-content h4 {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.action-day-content p {
+  font-size: 13px;
+  color: var(--sub);
+  line-height: 1.7;
+  margin: 0;
+}
+
+.signal-list, .blind-list, .action-list {
+  padding-left: 18px;
+  font-size: 14px;
+  line-height: 1.9;
+}
+.signal-list li { margin-bottom: 4px; }
+
+/* Secondary cities */
+.secondary-cities {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+.secondary-city {
+  background: var(--soft);
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  text-align: center;
+}
+.secondary-city-emoji {
+  font-size: 32px;
+  margin-bottom: 4px;
+}
+.secondary-city-name {
+  font-weight: 700;
+  font-size: 15px;
+  margin-bottom: 2px;
+}
+.secondary-city-tag {
+  font-size: 11px;
+  color: var(--sub);
+}
+.secondary-city-pct {
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.report-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  padding-bottom: 12px;
+}
+
+/* ========== REWARD PAGE ========== */
+.reward-page {
+  padding-top: 32px;
+  text-align: center;
+}
+.reward-icon {
+  font-size: 72px;
+  margin-bottom: 16px;
+  animation: pulse 2s ease-in-out infinite;
+}
+.reward-title {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.reward-sub {
+  font-size: 14px;
+  color: var(--sub);
+  margin-bottom: 24px;
+  padding: 0 12px;
+  line-height: 1.7;
+}
+.reward-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 24px 20px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+  text-align: left;
+}
+.reward-card h3 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent);
+}
+.reward-steps {
+  list-style: none;
+  counter-reset: step;
+}
+.reward-steps li {
+  counter-increment: step;
+  position: relative;
+  padding-left: 32px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.reward-steps li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+.wechat-card {
+  background: linear-gradient(135deg, #f0f9f0, #e8f5e8);
+  border: 2px solid var(--accent2);
+  border-radius: var(--radius-sm);
+  padding: 20px;
+  text-align: center;
+  margin: 16px 0;
+}
+.wechat-id {
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--accent2);
+  font-family: var(--font-mono, monospace);
+  letter-spacing: 2px;
+  margin: 8px 0;
+}
+.wechat-note {
+  font-size: 12px;
+  color: var(--sub);
+  margin-top: 8px;
+}
+.wechat-remark {
+  background: #fff;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-top: 10px;
+  font-weight: 500;
+  border: 1px dashed var(--accent2);
+}
+.reward-skip {
+  margin-top: 8px;
+  margin-bottom: 20px;
+}
+
+/* ========== BLESSING PAGE ========== */
+.blessing-page {
+  padding-top: 24px;
+  text-align: center;
+}
+.blessing-lanlan {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 20px;
+  animation: float 4s ease-in-out infinite;
+}
+.blessing-title {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+.blessing-letter {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  box-shadow: var(--shadow-lg);
+  text-align: left;
+  margin-bottom: 24px;
+  position: relative;
+}
+.blessing-letter::before {
+  content: '"';
+  position: absolute;
+  top: 8px;
+  left: 16px;
+  font-size: 60px;
+  color: var(--soft);
+  font-family: var(--font-serif);
+  line-height: 1;
+}
+.blessing-letter p {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  line-height: 2;
+  color: var(--text);
+  text-indent: 2em;
+  margin-bottom: 12px;
+}
+.blessing-letter p:last-child { margin-bottom: 0; }
+.blessing-signature {
+  text-align: right;
+  margin-top: 20px;
+  font-style: italic;
+  color: var(--sub);
+  font-size: 14px;
+}
+.blessing-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+/* Toast */
 .toast {
   position: fixed;
-  bottom: 30px;
+  bottom: 40px;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateY(20px);
   background: var(--text);
   color: #fff;
   padding: 12px 28px;
   border-radius: 50px;
   font-size: 14px;
-  font-family: var(--font);
+  font-family: var(--font-sans);
   z-index: 999;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: all 0.3s ease;
   pointer-events: none;
+  white-space: nowrap;
 }
-.toast.show { opacity: 1; }
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
 
-@media (max-width: 480px) {
-  .container { padding: 12px 14px 30px; }
-  .start-screen h1 { font-size: 26px; }
-  .question-text { font-size: 17px; }
-  .result-city-name { font-size: 30px; }
-  .option { padding: 14px 14px; font-size: 14px; }
+/* LanLan SVG character */
+.lanlan-svg {
+  width: 100%;
+  height: 100%;
 }
+
+/* Responsive */
+@media (max-width: 380px) {
+  .home-title { font-size: 30px; }
+  .question-text { font-size: 18px; }
+  .city-name { font-size: 36px; }
+  .city-preview { grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .city-preview-item { font-size: 20px; }
+  .secondary-cities { grid-template-columns: 1fr; }
+}
+
+/* Selection none */
+.no-select {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Fade transition for options */
+.option-enter {
+  animation: fadeIn 0.3s ease backwards;
+}
+.option-enter:nth-child(1) { animation-delay: 0.05s; }
+.option-enter:nth-child(2) { animation-delay: 0.1s; }
+.option-enter:nth-child(3) { animation-delay: 0.15s; }
+.option-enter:nth-child(4) { animation-delay: 0.2s; }
 </style>
 </head>
 <body>
 
-<div class="container" id="app">
+<div class="app-container" id="app">
 
   <!-- Progress -->
   <div class="progress-wrap" id="progressWrap" style="display:none;">
@@ -374,47 +953,76 @@ body {
     <div class="progress-text" id="progressText"></div>
   </div>
 
-  <!-- Start Screen -->
-  <div class="screen active" id="screenStart">
-    <div class="start-screen">
-      <div class="start-icon">🏙️</div>
-      <h1>你适合生活在<br>哪个城市？</h1>
-      <p class="subtitle">
-        每座城市都有自己的脾气。<br>
-        有的快、有的慢，有的热闹、有的安静。<br>
-        不是最好的城市适合你，而是最"像你"的城市。
-      </p>
-      <div class="meta">
-        <span>📋 18道题</span>
-        <span>⏱ 约3分钟</span>
-        <span>📊 科学匹配</span>
+  <!-- Screen: Home -->
+  <div class="screen active" id="screenHome">
+    <div class="home-page">
+      <div class="home-hero">
+        <div class="home-visual">🏙️</div>
+        <h1 class="home-title">你适合生活在<br>哪个城市？</h1>
+        <p class="home-subtitle">
+          每座城市都有自己的性格。<br>
+          有的快、有的慢，有的热闹、有的安静。<br>
+          不是最好的城市适合你，而是最"像你"的城市。
+        </p>
+        <div class="city-preview">
+          <div class="city-preview-item">🌃</div>
+          <div class="city-preview-item">🐼</div>
+          <div class="city-preview-item">🍃</div>
+          <div class="city-preview-item">🏔️</div>
+        </div>
+        <div class="home-meta">
+          <div class="home-meta-item">📋 30道题</div>
+          <div class="home-meta-item">⏱ 3-5分钟</div>
+          <div class="home-meta-item">📊 专属报告</div>
+        </div>
+        <button class="btn btn-primary" onclick="goToSupport()">开始探索</button>
+        <p class="home-disclaimer">
+          本测评仅供自我探索与娱乐参考，不构成任何人生决策建议。<br>
+          答案仅保存在你的浏览器中，不会上传到任何服务器。
+        </p>
+        <div class="home-brand">小红书：海蓝蓝蓝</div>
       </div>
-      <button class="btn btn-primary" onclick="startQuiz()">开始测评</button>
     </div>
   </div>
 
-  <!-- Quiz Screen -->
+  <!-- Screen: Support (prequiz) -->
+  <div class="screen" id="screenSupport">
+    <div class="support-page" id="supportContent"></div>
+  </div>
+
+  <!-- Screen: Quiz -->
   <div class="screen" id="screenQuiz">
-    <div class="quiz-screen">
+    <div class="quiz-page">
       <div class="question-card" id="questionCard"></div>
       <div class="quiz-actions">
-        <button class="btn btn-outline btn-sm" id="btnPrev" style="visibility:hidden;" onclick="prevQuestion()">上一题</button>
-        <button class="btn btn-primary btn-sm" id="btnNext" onclick="nextQuestion()">下一题</button>
+        <button class="btn btn-ghost btn-sm" id="btnPrev" style="visibility:hidden;" onclick="prevQuestion()">← 上一题</button>
+        <button class="btn btn-secondary btn-sm" id="btnNext" onclick="nextQuestion()">下一题 →</button>
       </div>
     </div>
   </div>
 
-  <!-- Calculating -->
+  <!-- Screen: Calculating -->
   <div class="screen" id="screenCalc">
-    <div class="calc-screen">
+    <div class="calc-page">
       <div class="calc-anim">🧭</div>
-      <div class="calc-text">正在为你匹配城市...</div>
+      <div class="calc-text">正在为你匹配城市气质...</div>
+      <div class="calc-sub">分析你的偏好维度中</div>
     </div>
   </div>
 
-  <!-- Result Screen -->
-  <div class="screen" id="screenResult">
-    <div class="result-screen" id="resultContent"></div>
+  <!-- Screen: Report -->
+  <div class="screen" id="screenReport">
+    <div class="report-page" id="reportContent"></div>
+  </div>
+
+  <!-- Screen: Reward -->
+  <div class="screen" id="screenReward">
+    <div class="reward-page" id="rewardContent"></div>
+  </div>
+
+  <!-- Screen: Blessing -->
+  <div class="screen" id="screenBlessing">
+    <div class="blessing-page" id="blessingContent"></div>
   </div>
 
   <!-- Toast -->
@@ -423,275 +1031,851 @@ body {
 </div>
 
 <script>
-// ==================== DATA ====================
+// ==================== LAN LAN CHARACTER SVG ====================
+const LANLAN_SVG = `
+<svg class="lanlan-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="gg" cx="50%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#7ec8e3"/>
+      <stop offset="100%" stop-color="#4a90b8"/>
+    </radialGradient>
+  </defs>
+  <ellipse cx="60" cy="108" rx="28" ry="5" fill="rgba(0,0,0,0.08)"/>
+  <circle cx="60" cy="55" r="38" fill="url(#gg)"/>
+  <circle cx="48" cy="50" r="5" fill="#fff"/>
+  <circle cx="72" cy="50" r="5" fill="#fff"/>
+  <circle cx="49" cy="51" r="2.5" fill="#2c3e50"/>
+  <circle cx="73" cy="51" r="2.5" fill="#2c3e50"/>
+  <circle cx="50" cy="50" r="1" fill="#fff"/>
+  <circle cx="74" cy="50" r="1" fill="#fff"/>
+  <ellipse cx="40" cy="62" rx="6" ry="4" fill="#f0a0a0" opacity="0.5"/>
+  <ellipse cx="80" cy="62" rx="6" ry="4" fill="#f0a0a0" opacity="0.5"/>
+  <path d="M52 65 Q60 72 68 65" stroke="#2c3e50" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M30 35 Q35 15 55 20" stroke="#4a90b8" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M90 35 Q85 15 65 20" stroke="#4a90b8" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <circle cx="32" cy="28" r="4" fill="#fff" opacity="0.6"/>
+  <circle cx="88" cy="28" r="4" fill="#fff" opacity="0.6"/>
+  <path d="M25 85 Q15 75 20 60" stroke="#4a90b8" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M95 85 Q105 75 100 60" stroke="#4a90b8" stroke-width="4" fill="none" stroke-linecap="round"/>
+</svg>`;
 
-// Dimension names
-const DIMS = ['Pace','Social','Ambition','Nature','Modernity'];
-const DIM_LABELS = ['节奏','社交','进取','自然','新潮'];
-const DIM_LABELS_FULL = ['生活节奏','社交能量','进取驱动','自然向往','新潮程度'];
+// ==================== TOPIC DATA ====================
+const TOPIC = {
+  title: "你适合生活在哪个城市？",
+  subtitle: "30道题，找到与你灵魂共振的城市",
+  slug: "city-match",
+  version: 30,
+  wechatId: "hailanlanlan_quiz"
+};
 
-// Questions: 15 questions, each with 4 options and dimension weights
+// 6 dimensions
+const DIMENSIONS = [
+  { id: "pace", name: "生活节奏", desc: "你偏好快节奏的充实感还是慢下来的质感", poles: ["悠然慢活", "高速运转"] },
+  { id: "social", name: "社交能量", desc: "人群给你充电还是独处让你恢复", poles: ["独处充电", "人群沸腾"] },
+  { id: "ambition", name: "进取驱动", desc: "事业成就在你生命中的权重", poles: ["自在平凡", "乘风破浪"] },
+  { id: "nature", name: "自然向往", desc: "你对山水自然的渴望程度", poles: ["都市丛林", "山水之间"] },
+  { id: "modernity", name: "新潮程度", desc: "你对新事物、新潮流的拥抱程度", poles: ["经典沉淀", "先锋前沿"] },
+  { id: "culture", name: "文化厚度", desc: "你对历史底蕴和人文气息的需求", poles: ["年轻鲜活", "厚重底蕴"] }
+];
+
+// 30 Questions
 const QUESTIONS = [
+  // 1-3: Easy entry questions
   {
-    q: '周五晚上，你理想中的放松方式是？',
+    id: "q01", scene: "周五晚上",
+    q: "周五晚上结束了一周工作，你最想做什么？",
     opts: [
-      { t: '约上好友去热闹的餐厅或酒吧，吃喝聊到深夜', w: {Social:2} },
-      { t: '去看一场演出、展览或电影，享受文化滋养', w: {Modernity:2} },
-      { t: '在家做一顿精致的晚餐，看一部好剧', w: {Pace:-1} },
-      { t: '收拾行囊，去郊外露营或住民宿过周末', w: {Nature:2} }
+      { t: "约上三五好友去热闹的馆子，边吃边聊到深夜", w: {social:2, pace:1} },
+      { t: "去看一场新上映的电影、展览或演出", w: {modernity:2, culture:1} },
+      { t: "在家做顿好吃的，窝在沙发里看剧", w: {pace:-2, social:-1} },
+      { t: "收拾背包，去郊外露营或民宿住一晚", w: {nature:2, pace:-1} }
     ]
   },
   {
-    q: '面对一个重要职业机会，你的第一反应是？',
+    id: "q02", scene: "清晨时光",
+    q: "理想中的周末早晨是什么样子的？",
     opts: [
-      { t: '必须拿下！全力以赴，哪怕牺牲一些个人时间', w: {Ambition:2, Pace:1} },
-      { t: '认真评估，适合就争取，不适合不勉强', w: {Ambition:1} },
-      { t: '先看看会不会影响现在的生活节奏', w: {Ambition:-1} },
-      { t: '机会虽好，但不值得为此过度消耗自己', w: {Ambition:-2, Pace:-1} }
+      { t: "早起去热闹的早市或老字号早餐店，感受烟火气", w: {social:2, culture:1} },
+      { t: "去健身房、跑团或上一节感兴趣的课", w: {ambition:1, pace:1} },
+      { t: "睡到自然醒，在阳台喝杯咖啡慢慢看本书", w: {pace:-2} },
+      { t: "进山徒步或骑行，在大自然中醒来", w: {nature:2, pace:-1} }
     ]
   },
   {
-    q: '你理想中的周末清晨是？',
+    id: "q03", scene: "居住空间",
+    q: "如果可以自由选择，你最想住在哪里？",
     opts: [
-      { t: '早起去热闹的菜市场或早市，感受城市烟火气', w: {Social:2, Pace:1} },
-      { t: '去健身房或参加一门感兴趣的课程', w: {Ambition:1, Pace:1} },
-      { t: '在阳台喝杯咖啡，看一本书，安静度过', w: {Pace:-1} },
-      { t: '去山里或湖边徒步，远离城市喧嚣', w: {Nature:2, Pace:-1} }
+      { t: "市中心高层公寓，窗外是璀璨城市天际线", w: {nature:-2, modernity:1, pace:1} },
+      { t: "老城区有故事的街区，出门就是咖啡馆和小店", w: {culture:2, social:1, modernity:-1} },
+      { t: "郊区带院子的房子，可以种花种草晒太阳", w: {nature:2, pace:-1} },
+      { t: "依山傍水的小镇或乡村，推窗就是风景", w: {nature:2, social:-2, pace:-2} }
+    ]
+  },
+  // 4-12: Core dimension questions
+  {
+    id: "q04", scene: "职业选择",
+    q: "面对一个绝佳但很辛苦的职业机会，你的第一反应是？",
+    opts: [
+      { t: "必须拿下！好机会不等人，辛苦是值得的", w: {ambition:2, pace:2} },
+      { t: "认真评估，适合就全力争取", w: {ambition:1} },
+      { t: "先想清楚会不会打乱现在的生活节奏", w: {ambition:-1, pace:-1} },
+      { t: "不太想追，机会很多，生活不只有工作", w: {ambition:-2, pace:-1} }
     ]
   },
   {
-    q: '哪种居住环境让你最心动？',
+    id: "q05", scene: "新事物",
+    q: "一个新出的热门App或网红店，你会？",
     opts: [
-      { t: '市中心高层公寓，落地窗外是璀璨的城市天际线', w: {Nature:-2, Modernity:1} },
-      { t: '老城区有历史感的街区，出门就是小店和茶馆', w: {Modernity:-1, Social:1} },
-      { t: '郊区独栋带院子，可以种花种菜', w: {Nature:2, Pace:-1} },
-      { t: '依山傍水的房子，推开窗就是大自然', w: {Nature:2, Social:-1} }
+      { t: "第一时间下载/打卡，我喜欢尝鲜", w: {modernity:2} },
+      { t: "会关注，等口碑稳定了再试试", w: {modernity:1} },
+      { t: "没特别大兴趣，熟悉的东西用着舒服", w: {modernity:-1} },
+      { t: "不关心，流行来得快去得也快", w: {modernity:-2, culture:1} }
     ]
   },
   {
-    q: '关于"新事物"的态度，更接近你的是？',
+    id: "q06", scene: "社交状态",
+    q: "在一个人很多的聚会上待了两小时，你感觉？",
     opts: [
-      { t: '第一时间尝鲜，最新的App和最火的店都要试试', w: {Modernity:2} },
-      { t: '会关注但不会盲目跟风，好的才会接受', w: {Modernity:1} },
-      { t: '不太主动追新，熟悉的才是舒服的', w: {Modernity:-1} },
-      { t: '对新事物保持距离，更喜欢经过时间沉淀的东西', w: {Modernity:-2} }
+      { t: "能量满满，认识了好多有趣的人", w: {social:2, pace:1} },
+      { t: "还挺开心，但需要找个角落喘口气", w: {} },
+      { t: "有点累，开始想什么时候能回家", w: {social:-1} },
+      { t: "如坐针毡，只想立刻溜走", w: {social:-2, pace:-1} }
     ]
   },
   {
-    q: '如果把你的性格比作一种动物，更接近？',
+    id: "q07", scene: "工作时间",
+    q: "如果可以自由支配时间，你理想的工作节奏是？",
     opts: [
-      { t: '狼——目标明确，团队协作，不断前进', w: {Ambition:2, Social:1} },
-      { t: '猫——独立、优雅，有自己的节奏', w: {Social:-1, Pace:-1} },
-      { t: '狗——热情、忠诚、喜欢陪伴', w: {Social:2} },
-      { t: '鸟——自由、轻盈，向往广阔天地', w: {Nature:1, Pace:-1} }
+      { t: "时间不重要，沉浸在热爱的事情里就好", w: {ambition:2} },
+      { t: "正常8小时，工作和生活分开", w: {} },
+      { t: "每天工作5-6小时足够了，多留时间给自己", w: {ambition:-1, pace:-1} },
+      { t: "能不工作就不工作，工作只是手段", w: {ambition:-2, nature:1} }
     ]
   },
   {
-    q: '工作中遇到棘手难题，你更倾向于？',
+    id: "q08", scene: "假期画面",
+    q: "最让你期待的假期画面是？",
     opts: [
-      { t: '主动加班解决，不搞定不罢休', w: {Ambition:2, Pace:1} },
-      { t: '寻求同事帮助，大家一起想办法', w: {Social:1} },
-      { t: '先放一放，换个环境说不定就有思路了', w: {Pace:-1} },
-      { t: '重新评估：这件事值得花这么多精力吗？', w: {Ambition:-1} }
+      { t: "在国际大都市探索：博物馆、米其林、夜景", w: {modernity:2, culture:1, pace:1} },
+      { t: "在异国小镇漫步，体验当地人的日常", w: {culture:1, social:1} },
+      { t: "在海边或山里找个地方发呆，什么都不做", w: {nature:2, pace:-2} },
+      { t: "和好朋友自驾Road Trip，走到哪玩到哪", w: {social:2, nature:1} }
     ]
   },
   {
-    q: '你对"朋友圈 / 社交媒体"的态度是？',
+    id: "q09", scene: "金钱观",
+    q: "关于赚钱这件事，更接近你的想法是？",
     opts: [
-      { t: '经常发，分享生活的乐趣', w: {Social:2, Modernity:1} },
-      { t: '偶尔发，只记录重要时刻', w: {} },
-      { t: '几乎不发但会看别人的', w: {Social:-1} },
-      { t: '不怎么用，更享受线下真实生活', w: {Social:-2, Modernity:-1} }
+      { t: "赚钱是自我价值的证明，越多越好", w: {ambition:2, modernity:1} },
+      { t: "够用就行，但要有一定品质感", w: {} },
+      { t: "钱够花就好，时间和自由更珍贵", w: {ambition:-1, pace:-1} },
+      { t: "对物质要求不高，简单生活就很快乐", w: {ambition:-2, nature:1} }
     ]
   },
   {
-    q: '如果可以自由选择，你希望每天工作多少小时？',
+    id: "q10", scene: "历史与现代",
+    q: "到一个城市旅行，你最想去的地方是？",
     opts: [
-      { t: '时间不重要，重要的是把事情做成', w: {Ambition:2} },
-      { t: '标准8小时，工作生活分开比较好', w: {} },
-      { t: '6小时左右，留更多时间给自己', w: {Ambition:-1, Pace:-1} },
-      { t: '越少越好，工作只是谋生手段', w: {Ambition:-2, Pace:-1} }
+      { t: "最新潮的商圈、艺术区和网红地标", w: {modernity:2} },
+      { t: "博物馆、历史古迹、老街区", w: {culture:2, modernity:-1} },
+      { t: "当地人去的菜市场、茶馆和小巷子", w: {social:1, culture:1} },
+      { t: "城市周边的自然风光", w: {nature:2} }
     ]
   },
   {
-    q: '一个让你期待的假期的画面是？',
+    id: "q11", scene: "城市气质",
+    q: "哪种城市气质最吸引你？",
     opts: [
-      { t: '在繁华都市探索——博物馆、米其林、百老汇', w: {Modernity:2, Pace:1} },
-      { t: '在异国小镇漫步，体验当地人的日常生活', w: {Social:1, Modernity:-1} },
-      { t: '在海边或山里放空，什么都不想', w: {Nature:2, Pace:-1} },
-      { t: '和朋友一起Road Trip，走到哪玩到哪', w: {Social:2, Nature:1} }
+      { t: "敢为人先——永远在创新前沿，不进则退", w: {modernity:2, ambition:1, pace:1} },
+      { t: "海纳百川——包容多元，什么样的人都能找到位置", w: {social:1, culture:1} },
+      { t: "悠然见南山——慢节奏，人与自然和谐共处", w: {nature:2, pace:-2} },
+      { t: "人间烟火——热闹真实，街坊邻里知根知底", w: {social:2, modernity:-1, pace:-1} }
     ]
   },
   {
-    q: '关于"钱"，以下哪种说法更接近你的内心？',
+    id: "q12", scene: "他人评价",
+    q: "如果朋友说你"太拼了"，你会觉得？",
     opts: [
-      { t: '赚钱是自我价值的证明，多多益善', w: {Ambition:2} },
-      { t: '够用就好但要有一定品质', w: {} },
-      { t: '钱够花就行，时间比钱更珍贵', w: {Ambition:-1, Pace:-1} },
-      { t: '对物质要求不高，简单生活就很快乐', w: {Ambition:-2, Nature:1} }
+      { t: "这是夸奖啊，年轻不拼什么时候拼", w: {ambition:2, pace:2} },
+      { t: "确实有点拼，但现阶段是需要的", w: {ambition:1} },
+      { t: "是该调整一下节奏了", w: {ambition:-1} },
+      { t: "我一点都不拼啊，他们不了解我", w: {ambition:-2, pace:-2} }
+    ]
+  },
+  // 13-20: More core + life scenario questions
+  {
+    id: "q13", scene: "幸福感来源",
+    q: "哪个时刻让你觉得"这就是幸福"？",
+    opts: [
+      { t: "完成一个大项目，被团队和领导认可", w: {ambition:2, social:1} },
+      { t: "和朋友围坐吃火锅，聊到开怀大笑", w: {social:2} },
+      { t: "独自在山顶看日出，世界安静辽阔", w: {nature:2, social:-2} },
+      { t: "在城市角落发现一家宝藏小店", w: {modernity:1, culture:1} }
     ]
   },
   {
-    q: '你觉得自己的社交状态更接近？',
+    id: "q14", scene: "朋友圈",
+    q: "你发朋友圈的频率更接近？",
     opts: [
-      { t: '社交达人——聚会中总是能量满满', w: {Social:2, Pace:1} },
-      { t: '愿意社交但需要独处来恢复能量', w: {} },
-      { t: '更喜欢一对一深聊，大场面不太自在', w: {Social:-1} },
-      { t: '社恐本恐——能不社交绝不社交', w: {Social:-2} }
+      { t: "经常发，生活值得被记录", w: {social:2, modernity:1} },
+      { t: "偶尔发，只分享重要或有趣的时刻", w: {} },
+      { t: "几乎不发但会刷别人的", w: {social:-1} },
+      { t: "不怎么用社交媒体，更喜欢线下生活", w: {social:-2, modernity:-1} }
     ]
   },
   {
-    q: '你更被哪种城市气质吸引？',
+    id: "q15", scene: "压力应对",
+    q: "压力特别大的时候，你会怎么排解？",
     opts: [
-      { t: '"敢为天下先"——永远在创新前沿', w: {Modernity:2, Ambition:1} },
-      { t: '"海纳百川"——包容、多元、有底蕴', w: {Social:1} },
-      { t: '"采菊东篱下"——悠然自得，与自然共生', w: {Nature:2, Pace:-1} },
-      { t: '"人间烟火"——热闹、真实、有温度', w: {Social:2, Modernity:-1} }
+      { t: "更投入工作/学习，用成就感对抗焦虑", w: {ambition:2, pace:1} },
+      { t: "找朋友出来吃饭聊天，倾诉一下", w: {social:2} },
+      { t: "一个人在家待着，看看书看看剧", w: {social:-1, pace:-1} },
+      { t: "去山里、海边或者公园走走", w: {nature:2, pace:-1} }
     ]
   },
   {
-    q: '如果有人评价你"太拼了"，你会觉得？',
+    id: "q16", scene: "天气影响",
+    q: "连续下了一周雨，你的心情是？",
     opts: [
-      { t: '这对我来说是夸奖', w: {Ambition:2, Pace:1} },
-      { t: '确实有点拼，但现阶段需要', w: {Ambition:1} },
-      { t: '可能需要调整一下节奏了', w: {Ambition:-1} },
-      { t: '我其实一点都不拼，他们不了解', w: {Ambition:-1, Pace:-1} }
+      { t: "有点闷，想找室内活动或朋友聚会", w: {social:1, pace:1} },
+      { t: "无所谓，雨天也有雨天的过法", w: {} },
+      { t: "还挺享受，适合在家看书喝茶", w: {pace:-1} },
+      { t: "有点低落，想念阳光和户外", w: {nature:1} }
     ]
   },
   {
-    q: '以下哪种场景让你最有"幸福感"？',
+    id: "q17", scene: "美食态度",
+    q: "关于"吃"，你更认同哪种说法？",
     opts: [
-      { t: '完成一个重要项目，被团队认可', w: {Ambition:2, Social:1} },
-      { t: '和朋友围坐吃火锅，聊人生八卦', w: {Social:2} },
-      { t: '独自在山顶看日出，世界安静而辽阔', w: {Nature:2, Social:-1} },
-      { t: '在喜欢城市角落发现一家宝藏小店', w: {Modernity:1, Social:1} }
+      { t: "要吃遍所有新开的餐厅，美食是探索城市的方式", w: {modernity:2, social:1} },
+      { t: "要有几家固定的老字号，吃得是记忆和味道", w: {culture:2, modernity:-1} },
+      { t: "好吃最重要，苍蝇馆子也无所谓", w: {social:1} },
+      { t: "自己做饭最健康舒服，不太在意外出就餐", w: {pace:-1, social:-1} }
+    ]
+  },
+  {
+    id: "q18", scene: "交通方式",
+    q: "日常出行你最喜欢的方式是？",
+    opts: [
+      { t: "地铁+打车，高效最重要", w: {pace:2, modernity:1} },
+      { t: "开车，自由灵活想去哪去哪", w: {ambition:1, pace:1} },
+      { t: "公交或骑车，可以慢慢看街景", w: {pace:-1, culture:1} },
+      { t: "步行最好，用脚步丈量城市", w: {pace:-2, nature:1} }
+    ]
+  },
+  {
+    id: "q19", scene: "动物比喻",
+    q: "如果把你比作一种动物，更接近？",
+    opts: [
+      { t: "猎豹——速度快、目标明确、充满力量", w: {ambition:2, pace:2} },
+      { t: "海豚——聪明、社交、在群体中如鱼得水", w: {social:2} },
+      { t: "猫——独立、优雅、有自己的节奏", w: {social:-1, pace:-1} },
+      { t: "候鸟——自由、迁徙、向往远方", w: {nature:2, ambition:-1} }
+    ]
+  },
+  {
+    id: "q20", scene: "学习成长",
+    q: "周末有一整天空闲，你更可能？",
+    opts: [
+      { t: "参加行业活动或课程，给自己充电", w: {ambition:2, modernity:1} },
+      { t: "和朋友聚会、逛展、看演出", w: {social:2, culture:1} },
+      { t: "在家整理房间、做饭、休息", w: {pace:-2} },
+      { t: "去郊外走走，接触大自然", w: {nature:2} }
+    ]
+  },
+  // 21-26: Life scenario questions
+  {
+    id: "q21", scene: "朋友来访",
+    q: "外地朋友来你的城市玩，你第一反应是带他们？",
+    opts: [
+      { t: "去最火的网红打卡点和新餐厅", w: {modernity:2, ambition:1} },
+      { t: "逛博物馆、历史景点，讲城市故事", w: {culture:2} },
+      { t: "穿街走巷，带你去我私藏的小店", w: {social:1, culture:1} },
+      { t: "去周边的山水景区玩", w: {nature:2} }
+    ]
+  },
+  {
+    id: "q22", scene: "深夜场景",
+    q: "凌晨1点你还醒着，更可能是因为？",
+    opts: [
+      { t: "加班赶项目，事情没做完睡不着", w: {ambition:2, pace:2} },
+      { t: "和朋友在外面玩得正嗨", w: {social:2, pace:1} },
+      { t: "刷手机、看剧，一不小心就晚了", w: {modernity:-1} },
+      { t: "很少这么晚，作息比较规律", w: {pace:-2} }
+    ]
+  },
+  {
+    id: "q23", scene: "搬家选择",
+    q: "搬家选房子，你最看重的因素是？",
+    opts: [
+      { t: "离公司近，通勤时间短最重要", w: {ambition:1, pace:2} },
+      { t: "周边商业配套齐全，生活便利", w: {modernity:1, social:1} },
+      { t: "环境安静、有公园或绿化好", w: {nature:2, pace:-1} },
+      { t: "有生活气息，邻居友善，有烟火气", w: {social:2, culture:1} }
+    ]
+  },
+  {
+    id: "q24", scene: "消费习惯",
+    q: "发了一笔奖金，你最想花在哪里？",
+    opts: [
+      { t: "报课程、买装备，投资自己", w: {ambition:2} },
+      { t: "买最新的数码产品或潮品", w: {modernity:2} },
+      { t: "请朋友吃饭或组织一次旅行", w: {social:2} },
+      { t: "存起来，或者去大自然里度个假", w: {nature:1, ambition:-1} }
+    ]
+  },
+  {
+    id: "q25", scene: "工作难题",
+    q: "工作上遇到一个棘手的问题，你倾向于？",
+    opts: [
+      { t: "死磕到底，不搞定不罢休", w: {ambition:2, pace:1} },
+      { t: "找同事或前辈讨论，集思广益", w: {social:1} },
+      { t: "先放一放，换个环境可能就有思路了", w: {pace:-1} },
+      { t: "重新评估这件事值不值得花这么多精力", w: {ambition:-1} }
+    ]
+  },
+  {
+    id: "q26", scene: "季节偏好",
+    q: "你最喜欢的季节是？",
+    opts: [
+      { t: "冬天——冷得干脆，适合在室内聚会", w: {social:1} },
+      { t: "秋天——天气舒服，适合出门和工作", w: {ambition:1, nature:1} },
+      { t: "夏天——热情奔放，昼长夜短玩得尽兴", w: {social:1, pace:1, modernity:1} },
+      { t: "春天——万物复苏，花开了去踏青", w: {nature:2, pace:-1} }
+    ]
+  },
+  // 27-30: Contrast / consistency questions
+  {
+    id: "q27", scene: "理想与现实",
+    q: "你理想中的"成功"更接近？",
+    opts: [
+      { t: "事业有成，在自己的领域做到顶尖", w: {ambition:2, modernity:1, pace:1} },
+      { t: "有温暖的家庭和真挚的朋友", w: {social:2} },
+      { t: "自由地做自己喜欢的事，不被束缚", w: {nature:1, ambition:-1, pace:-1} },
+      { t: "内心平静，与自己和世界和解", w: {pace:-2, nature:1} }
+    ]
+  },
+  {
+    id: "q28", scene: "10年后",
+    q: "想象十年后，你希望自己过着什么样的生活？",
+    opts: [
+      { t: "在事业上有一席之地，依然在快速成长", w: {ambition:2, pace:1} },
+      { t: "有丰富的人生体验，认识很多有趣的人", w: {social:2, modernity:1} },
+      { t: "在一个安静美丽的地方，过着从容的日子", w: {nature:2, pace:-2} },
+      { t: "在一个有人情味的城市，有自己的小确幸", w: {social:1, culture:1, pace:-1} }
+    ]
+  },
+  {
+    id: "q29", scene: "如果必须选",
+    q: "如果必须在以下选项中选一个，你选？",
+    opts: [
+      { t: "年薪百万但几乎没有个人时间", w: {ambition:2, pace:2} },
+      { t: "朋友环绕但住得很小", w: {social:2} },
+      { t: "离群索居但坐拥山水", w: {nature:2, social:-2, pace:-2} },
+      { t: "稳稳当当但一眼望得到头", w: {ambition:-2, pace:-1, modernity:-1} }
+    ]
+  },
+  {
+    id: "q30", scene: "城市声音",
+    q: "闭上眼睛，哪种"城市的声音"最让你安心？",
+    opts: [
+      { t: "地铁报站、键盘敲击、电梯叮咚——奋斗的声音", w: {ambition:2, pace:2, modernity:1} },
+      { t: "茶馆聊天、小贩叫卖、麻将声——烟火的声音", w: {social:2, culture:1, pace:-1} },
+      { t: "鸟鸣、风声、树叶沙沙——自然的声音", w: {nature:2, pace:-2} },
+      { t: "酒吧音乐、路人笑声、店里放的歌——热闹的声音", w: {social:2, modernity:1, pace:1} }
     ]
   }
 ];
 
-// City signatures [Pace, Social, Ambition, Nature, Modernity] on 1-5 scale
-const CITIES = {
-  chengdu: {
-    name: '成都',
-    emoji: '🐼',
-    tagline: '巴适生活家',
-    vec: [1.5, 4.5, 1.5, 3.5, 2.5],
-    color: '#5b8c5a',
-    location: '四川省 · 成都',
-    portrait: '你不把忙碌当勋章，懂得享受生活中的小确幸。你重视人际温度，喜欢市井烟火气，对物质有追求但不焦虑。你骨子里相信：生活是用来过的，不是用来赶的。',
-    insight: '你的幸福感来自"当下的质感"——一顿好饭的温度、一次朋友聚会的笑声、一个慵懒午后的阳光——而非远方的目标。你对成功的定义更多元：有人味、有滋味、有余味，比"厉害"更重要。',
-    action: '去成都的玉林路走一走，在人民公园的茶馆坐一个下午，吃一顿不赶时间的火锅。你会发现"巴适"不是躺平，是把每一天都活成值得的一天。',
-    golden: '"你的人生节奏，不是被推着走，而是被生活牵着走。"'
-  },
+// City archetypes
+const ARCHETYPES = {
   shanghai: {
-    name: '上海',
-    emoji: '🌃',
-    tagline: '精致都市人',
-    vec: [5,4,5,1,5],
-    color: '#c4733e',
-    location: '上海市',
-    portrait: '你对品质有执念——从食物到穿搭到家居都讲究。你精力充沛，享受城市的脉动：新开的展、最新的餐厅、最前沿的趋势，你都不想错过。你相信"更好的自己"是永恒的追求。',
-    insight: '你被"可能性"驱动。上海的迷人之处在于：它让你觉得任何事都有可能发生，而你刚好站在舞台中央。你不是浮躁，你是在一个值得认真对待的城市里认真对待自己。',
-    action: '给自己留一个"上海时刻"——每周去一家从没去过的咖啡馆或书店，不是为了打卡，是为了确认这座城市仍在为你提供新鲜感。',
-    golden: '"你不是在追赶潮流，你就是潮流的方向。"'
+    id: "shanghai",
+    name: "上海",
+    emoji: "🌃",
+    tagline: "精致都市人",
+    shareLine: "我居然是「上海·精致都市人」！你也来测测你适合住在哪个城市～",
+    vec: {pace:4.5, social:3.5, ambition:4.5, nature:1.5, modernity:5, culture:3},
+    color: "#c4733e",
+    location: "上海市",
+    keywords: ["精致", "高效", "先锋", "讲究", "国际范"],
+    profile: "你是一个对品质有要求的人——从穿搭到饮食到生活方式，你不将就。你精力充沛，享受城市的脉动：新开的展览、刚上榜的餐厅、最前沿的趋势，你都不想错过。你相信人应该往高处走，而上海这座城市，就是为那些愿意认真对待自己、认真对待生活的人准备的。你不害怕竞争，因为你知道竞争让人保持敏锐；你不排斥新事物，因为你明白开放才能生长。",
+    signals: [
+      "你会为了一杯好咖啡专门跑一趟，不接受凑合",
+      "你习惯高效率地安排时间，通勤路上也在听播客",
+      "你对审美有自己的坚持，朋友圈发图一定要修",
+      "你喜欢和比自己厉害的人聊天，能学到东西"
+    ],
+    blindSpots: [
+      "有时候把"优秀"当成了默认状态，忘了允许自己做个普通人",
+      "容易被消费主义裹挟，用购买来缓解焦虑"
+    ],
+    balance: [
+      {s:"追求卓越让你不断成长",b:"过度内卷会消耗掉感受生活的能力"},
+      {s:"审美和品味是你的护城河",b:"对精致的执念可能让你错过很多烟火气的快乐"}
+    ],
+    actions: [
+      "每周留一个"不计划"的下午，不带目的在梧桐区走走",
+      "去一次老字号的早餐店，体验一下上海本地人的早晨",
+      "找一个不需要精致打扮也能去的地方，纯粹地放松"
+    ],
+    strategies: [
+      {scene:"工作", tip:"利用上海的资源优势，多参加行业活动和沙龙，你的人脉会在这里指数级增长"},
+      {scene:"生活", tip:"不必每顿饭都打卡新店，找到两三家合口味的常菜馆，建立自己的生活半径"},
+      {scene:"社交", tip:"在上海，"弱关系"非常有价值，维护好那些行业里的点头之交"}
+    ],
+    weekPlan: [
+      {day:1, title:"城市漫步", tip:"下班后不坐地铁，从南京西路走到外滩，看看你平时忽略的街景"},
+      {day:2, title:"老味道", tip:"找一家开了十年以上的本帮菜馆，尝尝不是网红店的上海味道"},
+      {day:3, title:"看一场展", tip:"去一个你平时不会去的美术馆，不带拍照目的纯粹地看"},
+      {day:4, title:"慢一餐", tip:"今天点外卖不选最快的，选一家你一直想试的，认真吃完"},
+      {day:5, title:"见个朋友", tip:"约一个很久没见的朋友吃顿饭，不聊工作只聊生活"},
+      {day:6, title:"睡到自然醒", tip:"周六不设闹钟，醒了也不立刻看手机"},
+      {day:7, title:"做计划", tip:"写下三件这周让你开心的小事，无关成就，只是开心"}
+    ],
+    blessing: "你选择上海，不是因为它容易，而是因为它值得。那些在地铁里奔跑的清晨、在写字楼亮灯的夜晚、在梧桐区散步的周末，都会沉淀成你身上独有的气质。愿你在这座永远向前的城市里，既能乘风破浪，也别忘了偶尔停下来，看看窗外的风景。"
   },
   beijing: {
-    name: '北京',
-    emoji: '🏯',
-    tagline: '奋斗进取者',
-    vec: [5, 3, 4.5, 1, 2],
-    color: '#8b3a3a',
-    location: '北京市',
-    portrait: '你有把事情做大的愿望，不满足于小确幸。你能承受压力，甚至享受高强度带来的充实感。你喜欢有文化厚度的环境——历史、知识、思想碰撞——而非浮光掠影的消费文化。',
-    insight: '你需要的不是"舒服"，而是"值得"——一个让努力有意义的地方，一群志同道合的人，一件事值得全力以赴。你的驱动力来自意义感：做有意义的事，和有分量的人在一起。',
-    action: '在BJ，找到你的"圈子"比找到你的"位置"更重要。去参加一个行业沙龙，加入一个读书会，和认真做事的人在一起——他们的存在会不断提醒你当初为什么出发。',
-    golden: '"你要的不是一亩三分地，而是一片可以建造的旷野。"'
+    id: "beijing",
+    name: "北京",
+    emoji: "🏯",
+    tagline: "理想主义实干家",
+    shareLine: "原来我是「北京·理想主义实干家」！快来测测你属于哪座城市～",
+    vec: {pace:4, social:3.5, ambition:4.5, nature:2, modernity:3, culture:5},
+    color: "#8b3a3a",
+    location: "北京市",
+    keywords: ["大气", "有想法", "家国情怀", "能扛事", "爱聊天"],
+    profile: "你骨子里有股"劲儿"——你不满足于过小日子，你想做点什么、留下点什么。你能承受压力，甚至觉得有压力才是活着的感觉。你喜欢和有想法的人聊天，一杯茶能聊一下午，从国家大事到人生哲学。你被历史和文化吸引，走在胡同里你会觉得踏实，因为你知道脚下这片土地有故事。北京适合你，因为这里有足够大的舞台，也有足够深的底蕴。",
+    signals: [
+      "你吃饭时喜欢和人"侃大山"，聊时事聊观点",
+      "你对有文化底蕴的东西天然有好感",
+      "你觉得人活着得有点追求，不能只想着赚钱",
+      "你不介意环境糙一点，只要事情对就行"
+    ],
+    blindSpots: [
+      "有时候理想太大，反而忽略了身边的小确幸",
+      "容易和人争论观点，赢了辩论输了气氛"
+    ],
+    balance: [
+      {s:"有理想有情怀让你与众不同",b:"太宏大的叙事可能让你对当下不耐烦"},
+      {s:"能扛事能吃苦是你的核心竞争力",b:"别把硬撑当成坚强，允许自己说"我累了""}
+    ],
+    actions: [
+      "不要只待在朝阳区，去南城胡同里转转，感受老北京",
+      "找到你的"圈子"——和同频的人在一起比什么都重要",
+      "每周给自己一个"放空日"，不想理想不想未来"
+    ],
+    strategies: [
+      {scene:"工作", tip:"北京最不缺的就是聪明人，找到你真正热爱的方向扎下去，比追风口重要"},
+      {scene:"生活", tip:"学会和这座城市的"粗糙"共处，春天的沙冬天的风，都是北京的一部分"},
+      {scene:"社交", tip:"北京人喜欢"靠谱"的人，说到做到比能说会道更重要"}
+    ],
+    weekPlan: [
+      {day:1, title:"走胡同", tip:"下班绕路走一段老胡同，看看大爷大妈的生活"},
+      {day:2, title:"博物馆日", tip:"午休时间去国博或首博看一个展，免费而且值得"},
+      {day:3, title:"约饭局", tip:"约一个有意思的朋友吃顿北京菜，聊到饭馆打烊"},
+      {day:4, title:"爬个山", tip:"周末去香山或百望山，在山顶看看这座城市"},
+      {day:5, title:"听场戏", tip:"去德云社或人艺，体验一下老北京的娱乐"},
+      {day:6, title:"睡个懒觉", tip:"不设闹钟，醒了去楼下吃碗炒肝或卤煮"},
+      {day:7, title:"写点东西", tip:"把这周的想法写下来，不是给别人看，是给自己"}
+    ],
+    blessing: "北京这座城市，从来不缺梦想家，但缺把梦想落地的实干家——而你就是。那些在寒冬里赶路的清晨、在出租屋里改方案的深夜、在小酒馆里和朋友指点江山的夜晚，都不会白费。愿你在这座城里，既能仰望星空谈理想，也能脚踏实地过日子。"
   },
-  shenzhen: {
-    name: '深圳',
-    emoji: '🚀',
-    tagline: '创新弄潮儿',
-      vec: [5, 2.5, 5, 1, 5],
-    color: '#4a7a9b',
-    location: '广东省 · 深圳',
-    portrait: '你对"新"有本能的兴奋——新技术、新模式、新可能。你不怕变化，甚至需要变化来保持活力。你务实、直接、讲效率，不喜欢繁文缛节和无意义的传统。',
-    insight: '你属于"未来时态"——你不太怀念过去，因为最好的永远在下一个版本。深圳就是这样的城市：它不追问你从哪里来，只在乎你要到哪里去。你的安全感不来自"稳定"，而来自"还在生长"。',
-    action: '在深圳，最宝贵的资源是"信息差"。保持对行业前沿的关注，每月和不同领域的人做一次深度交流——可能是咖啡厅里的半小时聊天，胜过一个月的埋头苦干。',
-    golden: '"别人还在讨论，你已经做完了1.0版本。"'
+  chengdu: {
+    id: "chengdu",
+    name: "成都",
+    emoji: "🐼",
+    tagline: "巴适生活家",
+    shareLine: "我是「成都·巴适生活家」！太准了！你也来测测你适合哪个城市～",
+    vec: {pace:1.5, social:4.5, ambition:2, nature:3.5, modernity:2.5, culture:3.5},
+    color: "#5b8c5a",
+    location: "四川省 · 成都",
+    keywords: ["巴适", "烟火气", "会生活", "随和", "知足"],
+    profile: "你是那种"把日子过成日子"的人。你不把忙碌当勋章，不觉得只有出人头地才算成功。对你来说，好好吃饭、好好睡觉、和喜欢的人在一起，这些事比什么都重要。你身上有一种松弛感——不是不上进，而是你知道什么才是真正值得追求的。成都这座城市懂你：它不催你跑，它教你怎么"慢下来，好起来"。",
+    signals: [
+      "你觉得火锅和串串是人生必需品",
+      "你不喜欢把日程排太满，留白才舒服",
+      "你对人热情，和谁都能聊两句",
+      "你觉得晒太阳发呆不算浪费时间"
+    ],
+    blindSpots: [
+      "太安逸了可能会消磨斗志，有些机会在犹豫中溜走",
+      "有时候"随便""都行"是随和，但也可能是没主见"
+    ],
+    balance: [
+      {s:"懂得享受生活是一种了不起的能力",b:"过度安逸可能让你错过本该争取的机会"},
+      {s:"随和让你人缘极好",b:"学会说"不"也是重要的功课"}
+    ],
+    actions: [
+      "去人民公园鹤鸣茶社坐一下午，什么都不做就喝茶",
+      "不要只去网红店，让本地朋友带你吃真正的苍蝇馆子",
+      "利用成都的地理优势，周末去周边山里转转"
+    ],
+    strategies: [
+      {scene:"工作", tip:"成都的工作节奏相对友好，但不要因此降低对自己的要求，舒服的环境里也可以成长"},
+      {scene:"生活", tip:"把你的生活美学经营好——住得舒服、吃得好、有几个好友，这就是成都人的核心竞争力"},
+      {scene:"社交", tip:"在成都，很多事情是在饭桌上谈成的，不要低估饭局社交的价值"}
+    ],
+    weekPlan: [
+      {day:1, title:"泡茶馆", tip:"今天下班后去茶馆坐一个小时，看人来人往"},
+      {day:2, title:"吃顿好的", tip:"中午不外卖，找家馆子认真吃顿饭"},
+      {day:3, title:"逛菜市场", tip:"下班去菜市场转转，感受最鲜活的烟火气"},
+      {day:4, title:"见朋友", tip:"约朋友吃火锅，不聊正事只吹牛"},
+      {day:5, title:"周边游", tip:"周末去都江堰或青城山，当天来回"},
+      {day:6, title:"睡个够", tip:"想睡多久睡多久，起来吃个 brunch"},
+      {day:7, title:"学个新东西", tip:"哪怕是学一道菜、一个纸牌魔术，给生活加点料"}
+    ],
+    blessing: "别人都在拼命往前跑的时候，你选择慢慢走——这不是懒，这是智慧。人生不是一场竞赛，是每一顿热气腾腾的饭、每一次和朋友的开怀大笑、每一个阳光洒进来的午后组成的。愿你在成都这座城市里，巴适得板，把每一天都过成值得回忆的日子。"
   },
   hangzhou: {
-    name: '杭州',
-    emoji: '🍃',
-    tagline: '诗意平衡者',
-      vec: [3.5, 2, 2, 5, 4.5],
-    color: '#5b8c5a',
-    location: '浙江省 · 杭州',
-    portrait: '你追求的不只是成功，更是"美好地成功"。你需要工作有意义，也需要窗外有风景。你欣赏技术的力量，也珍惜自然的治愈。你不是不要快，而是不要"只剩下快"。',
-    insight: '你属于"双栖型"——既能在会议室里侃侃而谈，也能在西湖边发一下午呆。这种平衡不是妥协，而是更高级的活法：你知道真正的效率来自张弛有度，而灵感往往诞生在"不工作"的时刻。',
-    action: '在杭州，善用"切换"的力量——上午在写字楼写代码，下午去龙井村或梅家坞喝杯茶。这种地理和心理上的切换，会让你的创造力翻倍。',
-    golden: '"你要的从来不是更快，而是更完整。"'
+    id: "hangzhou",
+    name: "杭州",
+    emoji: "🍃",
+    tagline: "诗意平衡者",
+    shareLine: "测出来我是「杭州·诗意平衡者」！这个测评有点东西～",
+    vec: {pace:3, social:3, ambition:3.5, nature:4.5, modernity:4, culture:3.5},
+    color: "#5b8c8c",
+    location: "浙江省 · 杭州",
+    keywords: ["平衡", "诗意", "互联网", "山水", "温润"],
+    profile: "你追求的不是单一维度的成功，而是"完整"。你想要事业上的成就感，也想要推开窗就见山见水的惬意；你拥抱互联网和新经济，也珍惜传统文化里的留白和意境。你不是不要快，你是不要"只剩下快"。杭州就是为你这样的人准备的——它有阿里有互联网有创业氛围，但转个身就是西湖是茶山是千年古刹。你要的从来不是更快，而是更完整。",
+    signals: [
+      "你工作很努力但也注重生活品质",
+      "你喜欢山水自然但也离不开城市便利",
+      "你对审美有要求但不刻意追求网红感",
+      "你相信"工作是为了更好地生活"而不是反过来"
+    ],
+    blindSpots: [
+      "什么都想要平衡，有时候反而两边都不够深入",
+      "杭州太宜居了，容易待在舒适区不想动"
+    ],
+    balance: [
+      {s:"平衡感让你走得更远更稳",b:"有时候需要在某一个方向上All in才能突破"},
+      {s:"温润如玉的性格让你人缘很好",b:"适当展露锋芒，让人看到你的能力边界"}
+    ],
+    actions: [
+      "善用杭州的"切换"能力——上午在未来科技城开会，下午去龙井村喝茶",
+      "周末去西湖不要只去断桥，去杨公堤、茅家埠这些人少的地方",
+      "利用电商和互联网资源，发展一个你的"斜杠"身份"
+    ],
+    strategies: [
+      {scene:"工作", tip:"杭州的互联网和电商生态非常成熟，找到你的赛道深耕，机会很多"},
+      {scene:"生活", tip:"在杭州，你可以同时拥有城市的便利和自然的治愈，珍惜这种平衡"},
+      {scene:"社交", tip:"杭州的圈子相对小而精，维护好核心人脉比泛泛社交重要"}
+    ],
+    weekPlan: [
+      {day:1, title:"西湖晨走", tip:"早起半小时，在西湖边走走再去上班"},
+      {day:2, title:"喝茶去", tip:"下午去龙井或梅家坞喝杯茶，换个环境办公"},
+      {day:3, title:"尝新店", tip:"试试杭州新开的餐厅或咖啡馆"},
+      {day:4, title:"运动日", tip:"夜跑或骑行，沿钱塘江或西溪湿地"},
+      {day:5, title:"见同行", tip:"约同行朋友吃饭，聊聊行业动态"},
+      {day:6, title:"山里去", tip:"去径山或天目山，住一晚民宿"},
+      {day:7, title:"复盘日", tip:"这周做了什么？下周想做什么？写下来"}
+    ],
+    blessing: "你是那种少见的、在这个快时代里依然懂得"张弛有度"的人。你知道奋斗的意义，也明白停下来的价值。杭州的山水会给你灵感，杭州的互联网会给你机会，而你需要做的，就是在这之间找到属于你的节奏。愿你既能朝九晚五，也能浪迹天涯；既能披荆斩棘，也能赏花开花落。"
   },
-  dali: {
-    name: '大理',
-    emoji: '🏔️',
-    tagline: '自由灵魂',
-    vec: [1, 1.5, 1, 5, 1],
-    color: '#7b9ec4',
-    location: '云南省 · 大理',
-    portrait: '你对主流成功叙事有天然的疏离感。你不认为人生必须挤进某个轨道——赚更多的钱、爬更高的位子、买更大的房子。你需要空间——物理上的，更是心理上的。你向往一种不被定义的生活。',
-    insight: '你的驱动力是"自由"而非"成就"。对你来说，能做自己想做的事、按自己的节奏生活，就是最大的奢侈。你的焦虑往往来自"被卷入不想要的节奏"，而非"不够成功"。',
-    action: '去大理不需要下定决心，只需要一张机票。先住一个月，不规划日程，让每一天自然展开。你会发现，有些答案不是在忙碌中找到的，而是在放空中自己浮上来的。',
-    golden: '"你不是逃避，你是在选择另一种勇敢。"'
+  shenzhen: {
+    id: "shenzhen",
+    name: "深圳",
+    emoji: "🚀",
+    tagline: "创新实干派",
+    shareLine: "我是「深圳·创新实干派」！你适合哪座城市？快来测测！",
+    vec: {pace:4.5, social:3, ambition:4.5, nature:2.5, modernity:5, culture:1.5},
+    color: "#4a7a9b",
+    location: "广东省 · 深圳",
+    keywords: ["搞钱", "效率", "年轻", "实干", "敢闯"],
+    profile: "你是一个"未来导向"的人。你不怀念过去，因为你相信最好的永远在后面。你不怕变化，甚至需要变化才能让你保持活力。你务实、直接、讲效率，不喜欢虚的、不喜欢繁文缛节、不喜欢论资排辈。深圳就是为你这样的人准备的——这座城市不关心你从哪来、你爸是谁，它只关心你能做成什么。你的安全感不来自"稳定"，而来自"我还在生长"。",
+    signals: [
+      "你说话做事直接，不喜欢绕弯子",
+      "你对新科技新产品有本能的好奇",
+      "你觉得"搞钱"不丢人，是能力的证明",
+      "你不排外，因为你自己就是"外来者""
+    ],
+    blindSpots: [
+      "太注重效率和结果，可能错过过程中的风景",
+      "深圳太年轻，有时候会觉得缺少文化底蕴和人情味"
+    ],
+    balance: [
+      {s:"敢闯敢试让你抓住了很多机会",b:"一直冲刺别忘了偶尔停下来充充电"},
+      {s:"务实高效是你的核心竞争力",b:"有时候"无用"的事反而能带来意外收获"}
+    ],
+    actions: [
+      "利用深圳的创业生态，多和不同行业的人交流",
+      "周末去深圳的山海资源走走——东西冲、梧桐山都很好",
+      "不要只在南山福田待着，去老城区感受一下深圳的另一面"
+    ],
+    strategies: [
+      {scene:"工作", tip:"深圳的机会多但竞争也激烈，找到你的差异化优势，深耕一个细分领域"},
+      {scene:"生活", tip:"这座城市太"新"了，主动去创造一些属于你自己的传统和仪式感"},
+      {scene:"社交", tip:"深圳人都很务实，直接说需求比客套更有效率，但也要记得维护深层关系"}
+    ],
+    weekPlan: [
+      {day:1, title:"搞钱日", tip:"今天专注做最重要的那件事，深度工作3小时"},
+      {day:2, title:"见牛人", tip:"约一个你欣赏的人喝咖啡，请教一个问题"},
+      {day:3, title:"学新东西", tip:"花1小时了解一个你完全不懂的领域"},
+      {day:4, title:"运动日", tip:"去深圳湾跑个步或者骑行"},
+      {day:5, title:"尝个鲜", tip:"体验一个新出的App或服务"},
+      {day:6, title:"看海去", tip:"去大鹏半岛或东西冲看看海"},
+      {day:7, title:"躺平日", tip:"今天什么工作都不做，彻底放松"}
+    ],
+    blessing: "你属于那种"来了就是深圳人"的人——因为你和这座城市一样，年轻、敢闯、不认命。别人还在犹豫要不要出发，你已经在路上了；别人还在讨论可行性，你已经做出了1.0版本。深圳的钢筋水泥不是冰冷的，那是无数梦想家的骨架。愿你在这座永远年轻的城市，永远有折腾的勇气，也永远有重新出发的底气。"
   },
   guangzhou: {
-    name: '广州',
-    emoji: '🥢',
-    tagline: '烟火生活家',
-    vec: [2.5, 5, 2.5, 1, 2],
-    color: '#c4733e',
-    location: '广东省 · 广州',
-    portrait: '你实在、接地气，不喜欢装。对你来说，人生的意义藏在具体而微的事物里——一碟肠粉的嫩滑、一句"饮茶先啦"的松弛、老城区巷子里穿堂而过的风。你重视人情，相信"做人嘛，最重要是开心"。',
-    insight: '你是"体验主义者"——生命的厚度不来自抽象成就，而来自一个个有滋有味的瞬间。广州懂你：它不教你怎么成功，它教你怎么生活。你的核心需求不是"成为什么人"，而是"好好过每一天"。',
-    action: '在广州，花一个周末什么都不做，就是吃——早茶、午餐、下午茶、晚餐、宵夜。你会发现，这座城市在用食物告诉你：慢慢来，不急。',
-    golden: '"人生不是一场竞赛，是一顿又一顿的好饭。"'
+    id: "guangzhou",
+    name: "广州",
+    emoji: "🥢",
+    tagline: "烟火实在人",
+    shareLine: "「广州·烟火实在人」！这也太准了吧！快来测你适合哪个城市～",
+    vec: {pace:2.5, social:4.5, ambition:3, nature:2, modernity:2.5, culture:3.5},
+    color: "#c4733e",
+    location: "广东省 · 广州",
+    keywords: ["实在", "好吃", "接地气", "低调", "人情味"],
+    profile: "你是一个特别"落地"的人。你不喜欢装、不喜欢端着、不喜欢花里胡哨的东西。对你来说，人生的意义不在远方，而在具体的每一天里——一碟刚蒸好的肠粉、一碗老火靓汤、一句"得闲饮茶"的问候。你务实但不物质，低调但有自己的坚持。广州懂你：它不教你怎么成功，它教你怎么好好吃饭、好好过日子。",
+    signals: [
+      "你觉得吃是人生头等大事",
+      "你不喜欢穿得太正式，舒服最重要",
+      "你交朋友看重人品，不看身份地位",
+      "你觉得"讲金又讲心"才是真朋友"
+    ],
+    blindSpots: [
+      "太实在了有时候会显得不够"上进"",
+      "太接地气可能错过一些新潮和前沿的机会"
+    ],
+    balance: [
+      {s:"实在靠谱让你值得信赖",b:"有时候也需要抬头看路，不要只埋头拉车"},
+      {s:"低调是美德",b:"适当展示自己的能力，不要让别人低估你"}
+    ],
+    actions: [
+      "早起去喝一次早茶，体验广州的早晨",
+      "逛逛老西关，看看真正的广州是什么样子",
+      "学会煲一锅汤，这是广州人的生活哲学"
+    ],
+    strategies: [
+      {scene:"工作", tip:"广州的商业氛围非常成熟务实，做好产品和服务，口碑会帮你传播"},
+      {scene:"生活", tip:"发展你的"吃货地图"，在广州吃明白了，生活就明白了一半"},
+      {scene:"社交", tip:"广州人不喜欢来虚的，真诚和实在是最好的社交货币"}
+    ],
+    weekPlan: [
+      {day:1, title:"早茶日", tip:"早起去喝个早茶，虾饺烧麦叉烧包"},
+      {day:2, title:"逛老街", tip:"下班走走上下九或恩宁路"},
+      {day:3, title:"老火汤", tip:"今天在家煲一锅汤"},
+      {day:4, title:"宵夜局", tip:"约朋友吃宵夜，炒个牛河喝支啤酒"},
+      {day:5, title:"珠江夜游", tip:"沿珠江走走，吹吹风"},
+      {day:6, title:"逛市场", tip:"去清平市场或黄沙水产市场看看"},
+      {day:7, title:"家庭日", tip:"和家人或像家人的朋友吃顿饭"}
+    ],
+    blessing: "你是那种把"好好吃饭"当成人生大事的人——这不是贪吃，这是大智慧。人生不是为了追一个又一个目标而活，是为了一粥一饭的温度、为了朋友见面时那句"最近点啊"、为了老火靓汤咕嘟咕嘟的声音而活。愿你在广州这座城市，吃得开心、活得实在，每一天都有滋有味。"
+  },
+  dali: {
+    id: "dali",
+    name: "大理",
+    emoji: "🏔️",
+    tagline: "自由灵魂",
+    shareLine: "测出来我是「大理·自由灵魂」！说的就是我了！你也来测测～",
+    vec: {pace:1, social:2, ambition:1.5, nature:5, modernity:2, culture:3},
+    color: "#7b9ec4",
+    location: "云南省 · 大理",
+    keywords: ["自由", "自然", "文艺", "不被定义", "治愈"],
+    profile: "你对主流的成功叙事有天然的疏离感。你不觉得人必须按部就班——读书、工作、买房、结婚、生子——你想要的是"自己的版本"。你需要空间，物理上的空间更是心理上的空间。你向往一种不被闹钟、KPI、社会期待绑架的生活。你不是逃避，你只是在选择另一种勇敢——勇敢地按自己的方式过一生。大理就是为这样的你准备的——苍山为屏，洱海为镜，在这里你可以做你自己。",
+    signals: [
+      "你讨厌被管、被催、被安排",
+      "你在大自然里会觉得被治愈",
+      "你不喜欢大城市的拥挤和匆忙",
+      "你觉得"做自己"比"成功"重要"
+    ],
+    blindSpots: [
+      "太追求自由可能会逃避必要的责任和承诺",
+      "理想很丰满，但现实的生存问题还是要面对"
+    ],
+    balance: [
+      {s:"不随波逐流是你最珍贵的品质",b:"自由是有代价的，想清楚你愿意放弃什么"},
+      {s:"和自然连接让你充满能量",b:"人是社会动物，也需要深度的人际连接"}
+    ],
+    actions: [
+      "如果还没去过大理，先去住一个月再说，不要走马观花",
+      "发展一个能养活自己的技能，最好可以远程工作",
+      "建立几个深度连接的朋友，自由不是孤独"
+    ],
+    strategies: [
+      {scene:"工作", tip:"远程工作、自由职业、数字游民是适合你的方式，先建立这种能力再考虑移居"},
+      {scene:"生活", tip:"在大理建立你的日常节奏——什么时候看山、什么时候看书、什么时候见朋友"},
+      {scene:"社交", tip:"大理有很多和你一样的人，但深交需要时间，不要急"}
+    ],
+    weekPlan: [
+      {day:1, title:"看日出", tip:"早起在洱海边看一次日出"},
+      {day:2, title:"徒步日", tip:"爬苍山或走一段玉带路"},
+      {day:3, title:"发呆日", tip:"找个海边的咖啡馆，发一天呆也没关系"},
+      {day:4, title:"市集日", tip:"去赶集，和当地人买新鲜的菜"},
+      {day:5, title:"创作日", tip:"写点东西、画点画、弹弹琴，做点无用但喜欢的事"},
+      {day:6, title:"认识新朋友", tip:"在客栈或咖啡馆和陌生人聊聊天"},
+      {day:7, title:"自省日", tip:"这周过得开心吗？诚实面对自己"}
+    ],
+    blessing: "你不是在逃离什么，你是在奔赴什么——奔赴一种更真实的、更贴近内心的活法。很多人说想去大理但最后没去，你敢想也敢，这本身就很酷。苍山不会说话，但它会给你答案；洱海不会承诺，但它会给你平静。愿你在大理的风花雪月里，找到属于你的答案。记住：没有哪一种生活是标准答案，你喜欢的，就是最好的。"
   },
   chongqing: {
-    name: '重庆',
-    emoji: '🔥',
-    tagline: '江湖豪情客',
-    vec: [3, 5, 3, 4.5, 3],
-    color: '#c44e3e',
-    location: '重庆市',
-    portrait: '你性格鲜明，不习惯平淡。你喜欢有层次感的事物——无论是8D魔幻的地形，还是麻辣鲜香的火锅。你热情、直率、讲义气，适应力强，在各种复杂局面中都能找到自己的位置。',
-    insight: '你的生命力来自"张力"——你不需要一切井井有条，你享受在混乱中找到秩序、在陡峭中找到路径的过程。你的韧性极强：越是复杂的环境，越能激发你的创造力。',
-    action: '在重庆，爬一次山城步道，坐一次穿楼的轻轨，吃一次凌晨的火锅。你会发现这座城市像你一样：不按常理出牌，但自有一套强悍的逻辑。',
-    golden: '"别人看是魔幻，于你是日常。"'
+    id: "chongqing",
+    name: "重庆",
+    emoji: "🔥",
+    tagline: "江湖性情中人",
+    shareLine: "我是「重庆·江湖性情中人」！太对味了！你也来测测！",
+    vec: {pace:3.5, social:4.5, ambition:3.5, nature:4, modernity:3, culture:3},
+    color: "#c44e3e",
+    location: "重庆市",
+    keywords: ["火辣", "耿直", "8D魔幻", "江湖气", "韧性强"],
+    profile: "你性格鲜明，敢爱敢恨，不喜欢温吞水一样的人和事。你适应能力极强，越是复杂、越是魔幻、越是不按常理出牌的环境，你越能如鱼得水。你热情、直率、讲义气，为朋友可以两肋插刀。你喜欢有层次感的东西——不管是8D魔幻的地形，还是麻辣鲜香的火锅，还是跌宕起伏的人生。重庆就是这样一座城市——它不精致、不温柔，但它够劲、够味、够真。",
+    signals: [
+      "你喜欢吃辣，无辣不欢",
+      "你说话直来直去，不喜欢绕弯子",
+      "你性格里有股"狠劲"，不服输",
+      "你适应能力强，到哪都能活"
+    ],
+    blindSpots: [
+      "脾气上来的时候容易冲动，说话伤人",
+      "太江湖气有时候会缺乏边界感"
+    ],
+    balance: [
+      {s:"直率真诚让你交到真朋友",b:"学会控制情绪，狠话像火锅——香但伤胃"},
+      {s:"韧性强能扛事",b:"太能扛有时候会硬撑，学会示弱也是勇敢"}
+    ],
+    actions: [
+      "用脚步丈量这座8D城市，不要只看攻略",
+      "吃一次凌晨的火锅，在路边摊和陌生人喝酒",
+      "去看看重庆的老厂区和老街，那里有最真实的重庆"
+    ],
+    strategies: [
+      {scene:"工作", tip:"重庆人不喜欢虚的，用结果说话、用实力说话，你会被看见"},
+      {scene:"生活", tip:"接受这座城市的"魔幻"——导航失灵、找不到路、爬坡上坎，都是乐趣"},
+      {scene:"社交", tip:"对你来说最好的社交就是一起吃火锅，没有什么事是一顿火锅解决不了的"}
+    ],
+    weekPlan: [
+      {day:1, title:"火锅日", tip:"今天必须吃顿火锅，九宫格那种"},
+      {day:2, title:"爬坡日", tip:"走走山城步道，体验重庆的立体"},
+      {day:3, title:"看夜景", tip:"去南山一棵树或洪崖洞看夜景"},
+      {day:4, title:"坐轻轨", tip:"体验穿楼的李子坝和各种魔幻站点"},
+      {day:5, title:"喝小酒", tip:"约朋友去九街或路边摊喝点"},
+      {day:6, title:"周边游", tip:"去武隆或金佛山看看山水"},
+      {day:7, title:"休息", tip:"今天不辣，吃点清淡的养养胃"}
+    ],
+    blessing: "你和这座城市一样——热辣、鲜活、有血有肉。你不喜欢装，不喜欢端着，喜欢就说喜欢，不爽就说不爽。重庆的坡坡坎坎教会你：没有什么路是人走不出来的；重庆的火锅告诉你：生活就要够麻够辣才够味。愿你在这座魔幻江湖里，永远有火锅般的热情，永远有不服输的韧性，永远有三五好友陪你吃到凌晨。"
+  },
+  xiamen: {
+    id: "xiamen",
+    name: "厦门",
+    emoji: "🌊",
+    tagline: "文艺小清新",
+    shareLine: "我是「厦门·文艺小清新」！被猜透了！你也来测测吧～",
+    vec: {pace:2.5, social:3, ambition:2.5, nature:4.5, modernity:3, culture:3},
+    color: "#5eb8b8",
+    location: "福建省 · 厦门",
+    keywords: ["文艺", "海边", "慢生活", "小清新", "温柔"],
+    profile: "你喜欢"小而美"胜过"大而全"。你对美有天然的感知力——街角的一家花店、海边的落日、老别墅里的咖啡馆，这些小确幸就能让你开心很久。你性格温柔，不喜欢冲突和压力，希望生活是从容的、有美感的。你可能喜欢拍照、喜欢音乐、喜欢读书、喜欢一切让生活变得更可爱的东西。厦门就是为你准备的——海风、凤凰花、鼓浪屿的老别墅，这里的每一天都像一首散文诗。",
+    signals: [
+      "你喜欢海，看到海就心情好",
+      "你爱拍照，手机里全是生活碎片",
+      "你喜欢有设计感的小店",
+      "你不喜欢太大的城市，小而美就好"
+    ],
+    blindSpots: [
+      "太追求小确幸可能缺乏大的目标感",
+      "厦门太小了，待久了可能觉得无聊"
+    ],
+    balance: [
+      {s:"感受美的能力让你生活很有质感",b:"不要让"文艺"变成逃避现实的借口"},
+      {s:"温柔是你的力量",b:"也要学会争取自己想要的东西"}
+    ],
+    actions: [
+      "不要只去鼓浪屿，厦门岛本身有很多可爱的角落",
+      "培养一个和海有关的爱好——冲浪、帆船、或者只是散步",
+      "利用厦门的文艺氛围，发展你的创作能力"
+    ],
+    strategies: [
+      {scene:"工作", tip:"厦门适合文创、设计、互联网、贸易等行业，找到你的节奏"},
+      {scene:"生活", tip:"建立你的"厦门日常"——哪家的沙茶面最正宗、哪里看日落最美"},
+      {scene:"社交", tip:"厦门的圈子不大，真诚待人，朋友会越来越多"}
+    ],
+    weekPlan: [
+      {day:1, title:"看海日", tip:"下班后去环岛路走走，吹吹海风"},
+      {day:2, title:"咖啡馆", tip:"找一家没去过的咖啡馆坐坐"},
+      {day:3, title:"逛老街", tip:"去八市或沙坡尾逛逛"},
+      {day:4, title:"吃沙茶面", tip:"找到你最爱的那一家"},
+      {day:5, title:"拍照日", tip:"带上相机，记录今天的光影"},
+      {day:6, title:"鼓浪屿", tip:"选个非周末的日子上岛"},
+      {day:7, title:"发个呆", tip:"在海边坐一个下午，什么都不做"}
+    ],
+    blessing: "你有一双发现美的眼睛——别人眼里普通的街角，你能看出诗意；别人觉得平常的日落，你会掏出手机记录。这种能力很珍贵，它让你在任何环境里都能找到甜。厦门的海会包容你的小情绪，厦门的风会带走你的烦恼。愿你在这座海上花园，把日子过成诗，把生活过成画，永远保有那份温柔和感知美的能力。"
+  },
+  nanjing: {
+    id: "nanjing",
+    name: "南京",
+    emoji: "🌳",
+    tagline: "厚重梧桐派",
+    shareLine: "我是「南京·厚重梧桐派」！你也来测测你适合哪个城市～",
+    vec: {pace:3, social:3, ambition:3, nature:3.5, modernity:3, culture:5},
+    color: "#7d6b4e",
+    location: "江苏省 · 南京",
+    keywords: ["底蕴", "梧桐", "大气", "内敛", "悲情浪漫"],
+    profile: "你是一个有"厚度"的人。你不喜欢浮于表面的东西，你追求的是经得起时间检验的人和事。你可能话不多，但心里有数；你可能不张扬，但有自己的坚持。你对历史和人文有天然的亲近感，走在种满法国梧桐的路上你会觉得安心。南京这座城市有悲情也有豪迈，有历史也有生活，它不张扬，但见过大世面。它适合你——因为你也是这样的人。",
+    signals: [
+      "你喜欢有历史感的东西",
+      "你性格内敛，不喜欢张扬",
+      "你觉得秋天是最好的季节",
+      "你对梧桐有特殊的好感"
+    ],
+    blindSpots: [
+      "太内敛了别人可能不懂你",
+      "有时候会有点"古都的忧愁"，容易怀旧伤感"
+    ],
+    balance: [
+      {s:"有底蕴有厚度让你很耐看",b:"适当打开自己，让更多人了解你"},
+      {s:"内敛沉稳是好事",b:"该争取的时候也要主动"}
+    ],
+    actions: [
+      "秋天一定要去美龄宫和中山陵看梧桐",
+      "逛一逛南京的高校，南大、南师大、东大，都很美",
+      "不要只知道夫子庙，老门东和颐和路更值得去"
+    ],
+    strategies: [
+      {scene:"工作", tip:"南京的科教资源很强，国企、研究所、高校、互联网都有机会"},
+      {scene:"生活", tip:"南京的四季分明，学会欣赏每个季节的美——春樱、夏荷、秋梧桐、冬雪"},
+      {scene:"社交", tip:"南京人不喜欢张牙舞爪的人，真诚、稳重、靠谱最重要"}
+    ],
+    weekPlan: [
+      {day:1, title:"梧桐大道", tip:"下班走一段种满梧桐的路"},
+      {day:2, title:"博物馆", tip:"去南博或六朝博物馆看看"},
+      {day:3, title:"吃碗面", tip:"南京的皮肚面和老卤面值得一试"},
+      {day:4, title:"逛校园", tip:"去南大或南师大走走"},
+      {day:5, title:"玄武湖", tip:"傍晚去玄武湖散步"},
+      {day:6, title:"书店日", tip:"去先锋书店待半天"},
+      {day:7, title:"登高", tip:"去紫金山或阅江楼看看"}
+    ],
+    blessing: "你是那种像梧桐一样的人——根扎得深，所以站得稳；经历过风雨，所以枝叶繁茂。南京这座城市看尽了六朝繁华，也经历过伤痛，它教会你：什么都会过去，但有些东西会留下来。愿你在这座梧桐树下的城市，既有历史的厚重感，也有向前走的力量；既能欣赏秋天的落叶，也能迎接春天的新芽。"
   }
 };
 
 // ==================== STATE ====================
-
-let answers = new Array(QUESTIONS.length).fill(-1);
-let currentQ = 0;
-let quizStarted = false;
+const STORAGE_KEY_PREFIX = `assessment:${TOPIC.slug}:${TOPIC.version}`;
+let state = {
+  currentIndex: 0,
+  answers: new Array(QUESTIONS.length).fill(-1),
+  result: null,
+  supportMode: 'prequiz'
+};
 
 // ==================== HELPERS ====================
-
 function $(id) { return document.getElementById(id); }
 
 function showScreen(name) {
-  ['screenStart','screenQuiz','screenCalc','screenResult'].forEach(s => {
-    $(s).classList.remove('active');
-  });
+  const screens = ['screenHome','screenSupport','screenQuiz','screenCalc','screenReport','screenReward','screenBlessing'];
+  screens.forEach(s => $(s).classList.remove('active'));
   $(name).classList.add('active');
   $('progressWrap').style.display = (name === 'screenQuiz') ? 'block' : 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function updateProgress() {
-  const answered = answers.filter(a => a >= 0).length;
+  const answered = state.answers.filter(a => a >= 0).length;
   const pct = Math.round((answered / QUESTIONS.length) * 100);
   $('progressFill').style.width = pct + '%';
-  $('progressText').textContent = answered + ' / ' + QUESTIONS.length;
+  $('progressText').textContent = `${answered} / ${QUESTIONS.length}`;
 }
 
 function showToast(msg) {
@@ -701,346 +1885,733 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2000);
 }
 
-// ==================== QUIZ LOGIC ====================
+function saveState() {
+  localStorage.setItem(`${STORAGE_KEY_PREFIX}:answers`, JSON.stringify(state.answers));
+  localStorage.setItem(`${STORAGE_KEY_PREFIX}:progress`, JSON.stringify({ currentIndex: state.currentIndex }));
+  if (state.result) {
+    localStorage.setItem(`${STORAGE_KEY_PREFIX}:result`, JSON.stringify(state.result));
+  }
+}
 
+function loadState() {
+  try {
+    const answers = localStorage.getItem(`${STORAGE_KEY_PREFIX}:answers`);
+    const progress = localStorage.getItem(`${STORAGE_KEY_PREFIX}:progress`);
+    const result = localStorage.getItem(`${STORAGE_KEY_PREFIX}:result`);
+    if (answers) state.answers = JSON.parse(answers);
+    if (progress) {
+      const p = JSON.parse(progress);
+      state.currentIndex = p.currentIndex || 0;
+    }
+    if (result) state.result = JSON.parse(result);
+  } catch(e) {}
+}
+
+function clearState() {
+  localStorage.removeItem(`${STORAGE_KEY_PREFIX}:answers`);
+  localStorage.removeItem(`${STORAGE_KEY_PREFIX}:progress`);
+  localStorage.removeItem(`${STORAGE_KEY_PREFIX}:result`);
+  state.answers = new Array(QUESTIONS.length).fill(-1);
+  state.currentIndex = 0;
+  state.result = null;
+}
+
+// ==================== SUPPORT PAGE ====================
+function renderSupport(mode) {
+  state.supportMode = mode;
+  let html = '';
+
+  if (mode === 'prequiz') {
+    html += `
+      <div class="support-header">
+        <h2>开始之前</h2>
+        <p>花一点点时间了解这次探索</p>
+      </div>
+
+      <div class="support-card">
+        <h3>🔍 这次测评观察什么？</h3>
+        <p>我们不会给你贴标签，而是从 6 个维度观察你的生活偏好：</p>
+        <div class="dimensions-grid">
+          ${DIMENSIONS.map(d => `
+            <div class="dim-tag">
+              <strong>${d.name}</strong>
+              <span>${d.poles[0]} ↔ ${d.poles[1]}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="support-card">
+        <h3>⏱ 需要多长时间？</h3>
+        <p>共 30 道题，每题没有对错之分，按第一感觉选择即可，预计需要 3-5 分钟。</p>
+      </div>
+
+      <div class="support-card">
+        <h3>📊 结果如何生成？</h3>
+        <p>答案只保存在你当前的浏览器中，根据你的选择计算出你在各个维度上的倾向，再匹配最契合的城市气质。所有计算都在本地完成，不会上传到任何服务器。</p>
+      </div>
+
+      <div class="support-note">
+        💡 本测评结果是一种自我探索的参考，不是专业诊断，也不构成任何人生决策的唯一依据。最终选择在哪里生活，还需要结合你的实际情况。
+      </div>
+
+      <div class="support-card">
+        <h3>🔒 关于隐私</h3>
+        <p>你的答题数据和报告仅保存在当前浏览器中，你可以随时清除浏览器数据来删除这些内容。</p>
+      </div>
+
+      <div style="margin-top: 24px;">
+        <button class="btn btn-primary btn-block" onclick="startQuiz()">我准备好了，开始答题</button>
+        <button class="btn btn-ghost btn-block" style="margin-top:8px;" onclick="showScreen('screenHome')">返回首页</button>
+      </div>
+    `;
+  } else if (mode === 'reward') {
+    html = renderReward();
+  }
+
+  $('supportContent').innerHTML = html;
+  showScreen('screenSupport');
+}
+
+function goToSupport() {
+  clearState();
+  renderSupport('prequiz');
+}
+
+// ==================== QUIZ LOGIC ====================
 function startQuiz() {
-  quizStarted = true;
-  answers = new Array(QUESTIONS.length).fill(-1);
-  currentQ = 0;
+  if (state.result) {
+    renderReport();
+    showScreen('screenReport');
+    return;
+  }
+  state.currentIndex = 0;
+  state.answers = new Array(QUESTIONS.length).fill(-1);
+  saveState();
   showScreen('screenQuiz');
   updateProgress();
   renderQuestion();
 }
 
 function renderQuestion() {
-  const q = QUESTIONS[currentQ];
-  const sel = answers[currentQ];
+  const q = QUESTIONS[state.currentIndex];
+  const sel = state.answers[state.currentIndex];
+  const letters = ['A','B','C','D'];
 
-  let html = '<div class="question-num">第 ' + (currentQ+1) + ' 题 / 共 ' + QUESTIONS.length + ' 题</div>';
-  html += '<div class="question-text">' + q.q + '</div>';
+  let html = `<div class="question-scene">${q.scene}</div>`;
+  html += `<div class="question-num">第 ${state.currentIndex + 1} 题 / 共 ${QUESTIONS.length} 题</div>`;
+  html += `<div class="question-text">${q.q}</div>`;
   html += '<div class="options">';
 
   q.opts.forEach((opt, i) => {
     const selClass = (sel === i) ? ' selected' : '';
-    const letters = ['A','B','C','D'];
-    html += '<div class="option' + selClass + '" onclick="selectOption(' + i + ')">';
-    html += '<span class="option-letter">' + letters[i] + '</span>';
-    html += '<span>' + opt.t + '</span>';
+    html += `<div class="option option-enter${selClass}" onclick="selectOption(${i})">`;
+    html += `<span class="option-letter">${letters[i]}</span>`;
+    html += `<span>${opt.t}</span>`;
     html += '</div>';
   });
 
   html += '</div>';
   $('questionCard').innerHTML = html;
 
-  // Update buttons
-  $('btnPrev').style.visibility = (currentQ > 0) ? 'visible' : 'hidden';
+  $('btnPrev').style.visibility = (state.currentIndex > 0) ? 'visible' : 'hidden';
   const btnNext = $('btnNext');
-  if (currentQ === QUESTIONS.length - 1) {
-    btnNext.textContent = answers.every(a => a >= 0) ? '查看结果' : '下一题';
+  if (state.currentIndex === QUESTIONS.length - 1) {
+    btnNext.textContent = sel >= 0 ? '查看结果 ✨' : '下一题 →';
+    btnNext.className = sel >= 0 ? 'btn btn-primary btn-sm' : 'btn btn-secondary btn-sm';
   } else {
-    btnNext.textContent = '下一题';
+    btnNext.textContent = '下一题 →';
+    btnNext.className = 'btn btn-secondary btn-sm';
   }
 }
 
 function selectOption(idx) {
-  answers[currentQ] = idx;
-  renderQuestion();
+  const prevIdx = state.answers[state.currentIndex];
+  state.answers[state.currentIndex] = idx;
+  saveState();
   updateProgress();
+  renderQuestion();
+
+  // Auto advance after short delay
+  setTimeout(() => {
+    if (state.answers[state.currentIndex] === idx) {
+      if (state.currentIndex < QUESTIONS.length - 1) {
+        state.currentIndex++;
+        saveState();
+        renderQuestion();
+      }
+    }
+  }, 220);
 }
 
 function prevQuestion() {
-  if (currentQ > 0) {
-    currentQ--;
+  if (state.currentIndex > 0) {
+    state.currentIndex--;
+    saveState();
     renderQuestion();
   }
 }
 
 function nextQuestion() {
-  if (answers[currentQ] < 0) {
+  if (state.answers[state.currentIndex] < 0) {
     showToast('请先选择一个选项');
     return;
   }
 
-  if (currentQ < QUESTIONS.length - 1) {
-    currentQ++;
+  if (state.currentIndex < QUESTIONS.length - 1) {
+    state.currentIndex++;
+    saveState();
     renderQuestion();
   } else {
-    // All answered, calculate results
-    if (answers.some(a => a < 0)) {
+    if (state.answers.some(a => a < 0)) {
       showToast('还有未完成的题目');
       return;
     }
-    showResults();
+    calculateAndShow();
   }
 }
 
 // ==================== SCORING ====================
-
 function computeScores() {
-  const raw = { Pace: 0, Social: 0, Ambition: 0, Nature: 0, Modernity: 0 };
+  const raw = {};
+  DIMENSIONS.forEach(d => raw[d.id] = 0);
 
-  answers.forEach((ansIdx, qi) => {
+  state.answers.forEach((ansIdx, qi) => {
     if (ansIdx < 0) return;
     const w = QUESTIONS[qi].opts[ansIdx].w;
     for (const [dim, val] of Object.entries(w)) {
-      raw[dim] += val;
+      raw[dim] = (raw[dim] || 0) + val;
     }
   });
 
-  // Bias-corrected zero-centered normalization
-  const biasMean = { Pace: -4, Social: 7, Ambition: 2, Nature: 7, Modernity: 3 };
-  const maxAbs = { Pace: 14, Social: 18, Ambition: 18, Nature: 15, Modernity: 15 };
+  // Normalize to 1-5 scale
   const normalized = {};
-  for (const dim of DIMS) {
-    const centered = raw[dim] - biasMean[dim];
-    const v = 3 + (centered / maxAbs[dim]) * 2;
-    normalized[dim] = Math.max(1, Math.min(5, v));
-  }
+  const baseline = { pace: -3, social: 5, ambition: 0, nature: 6, modernity: 0, culture: 2 };
+  const scale = { pace: 14, social: 16, ambition: 16, nature: 14, modernity: 14, culture: 12 };
+
+  DIMENSIONS.forEach(d => {
+    const centered = (raw[d.id] || 0) - baseline[d.id];
+    const v = 3 + (centered / scale[d.id]) * 2;
+    normalized[d.id] = Math.max(1, Math.min(5, v));
+  });
 
   return { raw, normalized };
 }
 
-function findBestCity(normalized) {
-  let bestCity = null;
-  let bestDist = Infinity;
-  const userVec = DIMS.map(d => normalized[d]);
-
-  for (const [key, city] of Object.entries(CITIES)) {
+function findBestMatch(normalized) {
+  const results = [];
+  for (const [key, archetype] of Object.entries(ARCHETYPES)) {
     let dist = 0;
-    for (let i = 0; i < DIMS.length; i++) {
-      dist += Math.pow(userVec[i] - city.vec[i], 2);
-    }
+    DIMENSIONS.forEach(d => {
+      dist += Math.pow((normalized[d.id] || 3) - archetype.vec[d.id], 2);
+    });
     dist = Math.sqrt(dist);
-    if (dist < bestDist) {
-      bestDist = dist;
-      bestCity = key;
-    }
+    results.push({ key, archetype, dist });
   }
-
-  return { key: bestCity, distance: bestDist };
+  results.sort((a, b) => a.dist - b.dist);
+  return results;
 }
 
-// ==================== SVG RADAR CHART ====================
+function calculateAndShow() {
+  showScreen('screenCalc');
 
+  setTimeout(() => {
+    const { raw, normalized } = computeScores();
+    const matches = findBestMatch(normalized);
+    const top = matches[0];
+    const second = matches[1];
+    const third = matches[2];
+
+    // Calculate percentages (simplified: based on distance inverse)
+    const totalDist = matches.slice(0, 3).reduce((s, m) => s + 1/(m.dist + 0.5), 0);
+    const pct1 = Math.round((1/(top.dist + 0.5)) / totalDist * 100);
+    const pct2 = Math.round((1/(second.dist + 0.5)) / totalDist * 100);
+    const pct3 = 100 - pct1 - pct2;
+
+    state.result = {
+      cityKey: top.key,
+      normalized,
+      percentages: { first: pct1, second: pct2, third: pct3 },
+      secondKey: second.key,
+      thirdKey: third.key,
+      timestamp: Date.now()
+    };
+    saveState();
+    renderReport();
+    showScreen('screenReport');
+  }, 1800);
+}
+
+// ==================== RADAR CHART ====================
 function generateRadarSVG(userVec, cityVec, cityColor) {
-  const cx = 150, cy = 150, r = 110;
-  const n = DIMS.length;
+  const cx = 150, cy = 160, r = 110;
+  const n = DIMENSIONS.length;
   const angleStep = (2 * Math.PI) / n;
-  const startAngle = -Math.PI / 2; // Start from top
+  const startAngle = -Math.PI / 2;
 
   function polar(angle, radius) {
-    return {
-      x: cx + radius * Math.cos(angle),
-      y: cy + radius * Math.sin(angle)
-    };
+    return { x: cx + radius * Math.cos(angle), y: cy + radius * Math.sin(angle) };
   }
-
   function getPoints(vec) {
-    return DIMS.map((_, i) => {
+    return DIMENSIONS.map((d, i) => {
       const angle = startAngle + i * angleStep;
-      const val = vec[i];
+      const val = vec[d.id] || 3;
       const radius = (val / 5) * r;
       return polar(angle, radius);
     });
   }
 
-  // Grid circles
   let svg = '';
+  // Grid
   for (let level = 1; level <= 5; level++) {
     const lr = (level / 5) * r;
-    svg += '<circle cx="' + cx + '" cy="' + cy + '" r="' + lr + '" fill="none" stroke="#e0dbd2" stroke-width="0.5"/>';
+    svg += `<circle cx="${cx}" cy="${cy}" r="${lr}" fill="none" stroke="#e0dbd2" stroke-width="0.5"/>`;
   }
-
-  // Axis lines
+  // Axes
   for (let i = 0; i < n; i++) {
     const angle = startAngle + i * angleStep;
     const outer = polar(angle, r);
-    svg += '<line x1="' + cx + '" y1="' + cy + '" x2="' + outer.x + '" y2="' + outer.y + '" stroke="#e0dbd2" stroke-width="0.5"/>';
+    svg += `<line x1="${cx}" y1="${cy}" x2="${outer.x}" y2="${outer.y}" stroke="#e0dbd2" stroke-width="0.5"/>`;
   }
-
-  // Label backgrounds (subtle)
+  // Label backgrounds
   for (let i = 0; i < n; i++) {
     const angle = startAngle + i * angleStep;
-    const labelR = r + 28;
-    const lp = polar(angle, labelR);
-    svg += '<rect x="' + (lp.x - 22) + '" y="' + (lp.y - 10) + '" width="44" height="20" rx="4" fill="#faf8f5" opacity="0.85"/>';
+    const lp = polar(angle, r + 26);
+    svg += `<rect x="${lp.x - 22}" y="${lp.y - 10}" width="44" height="20" rx="4" fill="#faf8f5" opacity="0.9"/>`;
   }
-
-  // Dimension labels
+  // Labels
   for (let i = 0; i < n; i++) {
     const angle = startAngle + i * angleStep;
-    const labelR = r + 28;
-    const lp = polar(angle, labelR);
-    svg += '<text x="' + lp.x + '" y="' + (lp.y + 5) + '" text-anchor="middle" font-size="12" font-family="\'Noto Serif SC\', serif" fill="#6b5e4a" font-weight="600">' + DIM_LABELS[i] + '</text>';
+    const lp = polar(angle, r + 26);
+    svg += `<text x="${lp.x}" y="${lp.y + 5}" text-anchor="middle" font-size="12" font-family="'Noto Sans SC', sans-serif" fill="#6b5e4a" font-weight="600">${DIMENSIONS[i].name}</text>`;
   }
-
-  // City area (semi-transparent)
+  // City area (dashed)
   const cityPts = getPoints(cityVec);
-  svg += '<polygon points="' + cityPts.map(p => p.x + ',' + p.y).join(' ') + '" fill="' + cityColor + '" fill-opacity="0.12" stroke="' + cityColor + '" stroke-width="1.5" stroke-dasharray="5,3"/>';
-
-  // City dots
+  svg += `<polygon points="${cityPts.map(p => `${p.x},${p.y}`).join(' ')}" fill="${cityColor}" fill-opacity="0.1" stroke="${cityColor}" stroke-width="1.5" stroke-dasharray="5,3"/>`;
   cityPts.forEach(p => {
-    svg += '<circle cx="' + p.x + '" cy="' + p.y + '" r="3" fill="' + cityColor + '" opacity="0.6"/>';
+    svg += `<circle cx="${p.x}" cy="${p.y}" r="3" fill="${cityColor}" opacity="0.5"/>`;
   });
-
   // User area
   const userPts = getPoints(userVec);
-  svg += '<polygon points="' + userPts.map(p => p.x + ',' + p.y).join(' ') + '" fill="' + cityColor + '" fill-opacity="0.25" stroke="' + cityColor + '" stroke-width="2.5" stroke-linejoin="round"/>';
-
-  // User dots
+  svg += `<polygon points="${userPts.map(p => `${p.x},${p.y}`).join(' ')}" fill="${cityColor}" fill-opacity="0.25" stroke="${cityColor}" stroke-width="2.5" stroke-linejoin="round"/>`;
   userPts.forEach(p => {
-    svg += '<circle cx="' + p.x + '" cy="' + p.y + '" r="4.5" fill="#fff" stroke="' + cityColor + '" stroke-width="2.5"/>';
+    svg += `<circle cx="${p.x}" cy="${p.y}" r="4.5" fill="#fff" stroke="${cityColor}" stroke-width="2.5"/>`;
   });
-
-  // Score labels for user
+  // Score labels
   for (let i = 0; i < n; i++) {
     const angle = startAngle + i * angleStep;
-    const valR = (userVec[i] / 5) * r + 14;
-    const vp = polar(angle, valR);
-    svg += '<text x="' + vp.x + '" y="' + (vp.y + 4) + '" text-anchor="middle" font-size="10" font-family="\'Noto Serif SC\', serif" fill="' + cityColor + '" font-weight="700">' + userVec[i].toFixed(1) + '</text>';
+    const val = userVec[DIMENSIONS[i].id] || 3;
+    const vp = polar(angle, (val/5)*r + 16);
+    svg += `<text x="${vp.x}" y="${vp.y + 4}" text-anchor="middle" font-size="10" font-family="'Noto Sans SC', sans-serif" fill="${cityColor}" font-weight="700">${val.toFixed(1)}</text>`;
   }
 
-  return '<svg viewBox="0 0 300 320" width="300" height="320" xmlns="http://www.w3.org/2000/svg">' + svg + '</svg>';
+  return `<svg viewBox="0 0 300 340" width="300" height="340" xmlns="http://www.w3.org/2000/svg">${svg}</svg>`;
 }
 
-// ==================== RESULT RENDERING ====================
+// ==================== REPORT RENDERING ====================
+function renderReport() {
+  if (!state.result) return;
+  const city = ARCHETYPES[state.result.cityKey];
+  const second = ARCHETYPES[state.result.secondKey];
+  const third = ARCHETYPES[state.result.thirdKey];
+  const userVec = state.result.normalized;
+  const pcts = state.result.percentages;
 
-function showResults() {
-  showScreen('screenCalc');
+  // Dimension descriptions
+  function getDimDesc(dimId, val) {
+    const dim = DIMENSIONS.find(d => d.id === dimId);
+    if (val < 2.2) return `更偏向「${dim.poles[0]}」`;
+    if (val < 3.5) return `在「${dim.poles[0]}」和「${dim.poles[1]}」之间，相对均衡`;
+    return `更偏向「${dim.poles[1]}」`;
+  }
 
-  setTimeout(() => {
-    const { raw, normalized } = computeScores();
-    const { key, distance } = findBestCity(normalized);
-    const city = CITIES[key];
-    const userVec = DIMS.map(d => normalized[d]);
+  let html = '';
 
-    let html = '';
+  // Hero with LanLan
+  html += `
+    <div class="report-hero">
+      <div class="lanlan-char">${LANLAN_SVG}</div>
+      <div class="city-emoji">${city.emoji}</div>
+      <div class="city-name" style="color:${city.color}">${city.name}</div>
+      <div class="city-tagline" style="color:${city.color}">${city.tagline}</div>
+      <div class="city-golden">${city.shareLine}</div>
+      <p class="city-shareline">—— 你的灵魂匹配城市 ——</p>
+    </div>
+  `;
 
-    // Header
-    html += '<div class="result-header">';
-    html += '<div class="result-city-emoji">' + city.emoji + '</div>';
-    html += '<div class="result-city-name">' + city.name + '</div>';
-    html += '<div class="result-tagline">' + city.tagline + '</div>';
-    html += '<div class="result-golden">' + city.golden + '</div>';
-    html += '</div>';
+  // Core keywords
+  html += `
+    <div class="report-section">
+      <h3><span class="section-icon">🏷️</span>你的核心画像</h3>
+      <p>如果用几个关键词来形容你：</p>
+      <div class="keyword-tags">
+        ${city.keywords.map(k => `<span class="keyword-tag" style="color:${city.color};background:${city.color}15;">${k}</span>`).join('')}
+      </div>
+      <p style="margin-top:16px;">${city.profile}</p>
+    </div>
+  `;
 
-    // Portrait
-    html += '<div class="result-card">';
-    html += '<h3>🔍 你的画像</h3>';
-    html += '<p>' + city.portrait + '</p>';
-    html += '</div>';
+  // Radar chart
+  html += `
+    <div class="report-section" style="text-align:center;">
+      <h3 style="justify-content:center;"><span class="section-icon">📊</span>你的六维气质剖面</h3>
+      <p style="font-size:13px;color:var(--sub);margin-bottom:8px;">实线是你，虚线是${city.name}的城市轮廓</p>
+      <div class="radar-container">
+        ${generateRadarSVG(userVec, city.vec, city.color)}
+      </div>
+      <div class="radar-legend">
+        <div class="radar-legend-item">
+          <span class="radar-legend-line" style="background:${city.color};"></span>
+          <span>你的气质</span>
+        </div>
+        <div class="radar-legend-item">
+          <span class="radar-legend-line" style="background:${city.color};opacity:0.5;background-image:repeating-linear-gradient(90deg,${city.color} 0,${city.color} 4px,transparent 4px,transparent 7px);"></span>
+          <span>${city.name}城市轮廓</span>
+        </div>
+      </div>
+    </div>
+  `;
 
-    // Insight
-    html += '<div class="result-card">';
-    html += '<h3>💡 核心洞见</h3>';
-    html += '<p>' + city.insight + '</p>';
-    html += '</div>';
+  // Dimension analysis
+  html += `
+    <div class="report-section">
+      <h3><span class="section-icon">📐</span>维度深度解读</h3>
+      <p style="font-size:13px;color:var(--sub);margin-bottom:16px;">每个维度代表你在一个生活选择上的倾向，没有好坏之分。</p>
+      <div class="dim-bar-list">
+        ${DIMENSIONS.map(d => {
+          const val = userVec[d.id] || 3;
+          const pct = Math.round(val / 5 * 100);
+          return `
+            <div class="dim-bar-item">
+              <div class="dim-bar-label">
+                <span class="dim-bar-name">${d.name}</span>
+                <span class="dim-bar-score" style="color:${city.color}">${val.toFixed(1)}</span>
+              </div>
+              <div class="dim-bar-track">
+                <div class="dim-bar-fill" style="width:${pct}%;background:${city.color}"></div>
+              </div>
+              <div class="dim-bar-desc">${d.desc}——${getDimDesc(d.id, val)}</div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    </div>
+  `;
 
-    // Action
-    html += '<div class="result-card">';
-    html += '<h3>🎯 下一步行动</h3>';
-    html += '<p>' + city.action + '</p>';
-    html += '</div>';
+  // Why this city
+  html += `
+    <div class="report-section">
+      <h3><span class="section-icon">💡</span>为什么是${city.name}？</h3>
+      <p>${city.shareLine.replace('我居然是「','').replace('」！你也来测测你适合住在哪个城市～','')}${city.shareLine.replace('我是「','').replace(/」！.*$/,'')}——这不是随机分配的标签，而是你在30道题里做出的每一个选择，共同指向的结果。</p>
+      <p>你对生活节奏的偏好、你对社交的态度、你对成就的定义、你对自然的渴望、你对新事物的拥抱程度、你对文化的敏感度——这六股力量交织在一起，勾勒出了你的"城市气质"。而${city.name}，恰好与这种气质高度共振。</p>
+      <p>这不是说"你只能住在这里"，而是说"如果你住在这里，大概率会觉得舒服、自在、像回家"。城市是容器，你才是内容。</p>
+    </div>
+  `;
 
-    // Radar
-    html += '<div class="radar-section">';
-    html += '<h3>📊 你的维度剖面</h3>';
-    html += '<div class="radar-sub">实线是你，虚线是' + city.name + '的城市轮廓</div>';
-    html += generateRadarSVG(userVec, city.vec, city.color);
-    html += '</div>';
+  // Signals
+  html += `
+    <div class="report-section">
+      <h3><span class="section-icon">🔍</span>你在生活中可能是这样的</h3>
+      <ul class="signal-list">
+        ${city.signals.map(s => `<li>${s}</li>`).join('')}
+      </ul>
+    </div>
+  `;
 
-    // Dimension details
-    html += '<div class="result-card">';
-    html += '<h3>📐 维度解读</h3>';
-    const dimDescs = {
-      Pace: ['慢节奏是你的舒适区', '中等节奏，收放自如', '快节奏让你充满能量'],
-      Social: ['独处是你的充电方式', '社交适度，质量优先', '人群中你如鱼得水'],
-      Ambition: ['舒适比成功更重要', '进取有度，懂得平衡', '不设上限地向上生长'],
-      Nature: ['都市便利是你的首选', '自然与城市可以兼得', '山水之间才是你的归属'],
-      Modernity: ['传统有传统的智慧', '新旧之间自由切换', '永远站在前沿']
-    };
-    let dimHTML = '<div style="display:flex;flex-direction:column;gap:8px;">';
-    DIMS.forEach((d,i) => {
-      const v = userVec[i];
-      let desc;
-      if (v < 2.5) desc = dimDescs[d][0];
-      else if (v < 3.8) desc = dimDescs[d][1];
-      else desc = dimDescs[d][2];
-      dimHTML += '<div style="display:flex;align-items:center;gap:10px;font-size:13px;">';
-      dimHTML += '<span style="font-weight:700;min-width:48px;color:' + city.color + ';">' + DIM_LABELS_FULL[i] + '</span>';
-      dimHTML += '<span style="flex:1;height:6px;background:#e8e3db;border-radius:3px;overflow:hidden;">';
-      dimHTML += '<span style="display:block;height:100%;width:' + (v/5*100) + '%;background:' + city.color + ';border-radius:3px;"></span>';
-      dimHTML += '</span>';
-      dimHTML += '<span style="font-weight:700;min-width:32px;text-align:right;">' + v.toFixed(1) + '</span>';
-      dimHTML += '<span style="color:#6b5e4a;min-width:120px;font-size:12px;">' + desc + '</span>';
-      dimHTML += '</div>';
-    });
-    dimHTML += '</div>';
-    html += dimHTML;
-    html += '</div>';
+  // Balance card (strengths & blind spots)
+  html += `
+    <div class="report-section">
+      <h3><span class="section-icon">⚖️</span>优势与盲点</h3>
+      <p>没有完美的性格，也没有完美的城市。你的优势背后往往连着你的盲点，了解这些可以让你更从容。</p>
+      <div class="balance-card">
+        ${city.balance.map(b => `
+          <div class="balance-row">
+            <div class="balance-side strength">✨ ${b.s}</div>
+            <div class="balance-divider"></div>
+            <div class="balance-side blind">🌫️ ${b.b}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
 
-    // Second best
-    const sorted = Object.entries(CITIES)
-      .filter(([k]) => k !== key)
-      .map(([k, c]) => {
-        let d = 0;
-        for (let i = 0; i < DIMS.length; i++) d += Math.pow(userVec[i] - c.vec[i], 2);
-        return { key: k, city: c, dist: Math.sqrt(d) };
-      })
-      .sort((a, b) => a.dist - b.dist);
+  // Scenario strategies
+  html += `
+    <div class="report-section">
+      <h3><span class="section-icon">🗺️</span>情境策略</h3>
+      <p>如果你真的去了${city.name}（或者你已经在那里），以下建议可能对你有用：</p>
+      ${city.strategies.map(s => `
+        <p style="margin-bottom:8px;"><strong style="color:${city.color}">${s.scene}：</strong>${s.tip}</p>
+      `).join('')}
+    </div>
+  `;
 
-    if (sorted.length > 0) {
-      const second = sorted[0];
-      html += '<div class="result-card">';
-      html += '<h3>🥈 第二匹配</h3>';
-      html += '<p style="font-size:14px;color:var(--sub);">你的次适配城市是 <strong style="color:var(--text);">' + second.city.emoji + ' ' + second.city.name + '</strong>（' + second.city.tagline + '），如果' + city.name + '的某些面向让你犹豫，不妨也看看' + second.city.name + '。</p>';
-      html += '</div>';
-    }
+  // 7-day action plan
+  html += `
+    <div class="report-section">
+      <h3><span class="section-icon">📅</span>7天体验计划</h3>
+      <p style="font-size:13px;color:var(--sub);margin-bottom:16px;">不管你现在在哪个城市，你都可以从这7件小事开始，感受一下${city.name}式的生活：</p>
+      ${city.weekPlan.map((p, i) => `
+        <div class="action-day">
+          <div class="action-day-num" style="background:${city.color}">${['一','二','三','四','五','六','日'][i]}</div>
+          <div class="action-day-content">
+            <h4>第${i+1}天：${p.title}</h4>
+            <p>${p.tip}</p>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
 
-    html += '<div class="result-actions">';
-    html += '<button class="btn btn-primary" onclick="copyResult()">📋 复制全文</button>';
-    html += '<button class="btn btn-outline" onclick="startQuiz()">🔄 再测一次</button>';
-    html += '</div>';
+  // Immediate actions
+  html += `
+    <div class="report-section">
+      <h3><span class="section-icon">🎯</span>三件可以立即尝试的事</h3>
+      <ul class="action-list">
+        ${city.actions.map((a, i) => `<li><strong style="color:${city.color}">行动${i+1}：</strong>${a}</li>`).join('')}
+      </ul>
+    </div>
+  `;
 
-    $('resultContent').innerHTML = html;
-    showScreen('screenResult');
+  // Secondary cities
+  html += `
+    <div class="report-section">
+      <h3><span class="section-icon">🥈</span>其他高匹配城市</h3>
+      <p>除了${city.name}，这两座城市也很适合你：</p>
+      <div class="secondary-cities">
+        <div class="secondary-city">
+          <div class="secondary-city-emoji">${second.emoji}</div>
+          <div class="secondary-city-name">${second.name}</div>
+          <div class="secondary-city-tag">${second.tagline}</div>
+          <div class="secondary-city-pct" style="color:${second.color}">匹配度 ${pcts.second}%</div>
+        </div>
+        <div class="secondary-city">
+          <div class="secondary-city-emoji">${third.emoji}</div>
+          <div class="secondary-city-name">${third.name}</div>
+          <div class="secondary-city-tag">${third.tagline}</div>
+          <div class="secondary-city-pct" style="color:${third.color}">匹配度 ${pcts.third}%</div>
+        </div>
+      </div>
+      <p style="font-size:13px;color:var(--sub);margin-top:12px;">如果${city.name}的某些面向让你犹豫，不妨也了解一下${second.name}和${third.name}，它们可能在某些方面更契合你当下的状态。</p>
+    </div>
+  `;
 
-    // Scroll to top
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, 1500);
+  // Final words
+  html += `
+    <div class="report-section" style="background: linear-gradient(135deg, ${city.color}0d, ${city.color}15); border: 1px solid ${city.color}30;">
+      <h3><span class="section-icon">💌</span>写在最后</h3>
+      <p>城市没有高低之分，只有适合与不适合。有人在超一线城市如鱼得水，有人在小城小镇怡然自得——重要的不是别人怎么看，而是你自己过得开不开心、舒不舒服、有没有活成你想要的样子。</p>
+      <p>这份报告不是为了给你贴标签，而是帮你看见：你内心真正渴望的是什么样的生活。愿你不管最终选择在哪里，都能把日子过成你喜欢的样子。</p>
+    </div>
+  `;
+
+  // Actions
+  html += `
+    <div class="report-actions">
+      <button class="btn btn-primary btn-sm" onclick="copyReport()">📋 复制完整报告</button>
+      <button class="btn btn-secondary btn-sm" onclick="goToReward()">🎁 领取专属福利</button>
+    </div>
+    <div class="report-actions">
+      <button class="btn btn-ghost btn-sm" onclick="retakeQuiz()">🔄 重新测评</button>
+      <button class="btn btn-ghost btn-sm" onclick="goToBlessing()">💌 查看祝福</button>
+    </div>
+  `;
+
+  $('reportContent').innerHTML = html;
 }
 
-function copyResult() {
-  const cityKey = findBestCity(computeScores().normalized).key;
-  const city = CITIES[cityKey];
+function copyReport() {
+  if (!state.result) return;
+  const city = ARCHETYPES[state.result.cityKey];
+  const second = ARCHETYPES[state.result.secondKey];
 
   const text = `【你适合生活在哪个城市？】测评结果
 
-🏙️ ${city.emoji}  ${city.name} · ${city.tagline}
+${city.emoji} ${city.name} · ${city.tagline}
 
-📌 金句：${city.golden}
+📌 分享：${city.shareLine}
 
 🔍 你的画像
-${city.portrait}
+${city.profile}
 
-💡 核心洞见
-${city.insight}
+🏷️ 关键词：${city.keywords.join('、')}
 
-🎯 下一步行动
-${city.action}
+🔍 生活中你可能是这样的：
+${city.signals.map((s,i)=>`${i+1}. ${s}`).join('\n')}
 
-—— 测评来自「城市适配度测评」`;
+⚖️ 优势与盲点：
+${city.balance.map(b=>`✨ ${b.s}\n🌫️ ${b.b}`).join('\n\n')}
+
+🎯 立即行动：
+${city.actions.map((a,i)=>`${i+1}. ${a}`).join('\n')}
+
+🥈 次匹配：${second.emoji} ${second.name}（${second.tagline}）
+
+—— 测评来自「小红书：海蓝蓝蓝」
+—— 你也来测测吧！`;
 
   navigator.clipboard.writeText(text).then(() => {
-    showToast('已复制到剪贴板');
+    showToast('报告已复制到剪贴板');
+  }).catch(() => {
+    showToast('复制失败，请手动选择');
+  });
+}
+
+function retakeQuiz() {
+  clearState();
+  showScreen('screenHome');
+}
+
+// ==================== REWARD PAGE ====================
+function renderReward() {
+  return `
+    <div class="reward-page">
+      <div class="reward-icon">🎁</div>
+      <h2 class="reward-title">这是一份额外的小礼物</h2>
+      <p class="reward-sub">
+        如果你喜欢这个测评，欢迎支持一下～<br>
+        完成小互动即可免费获得一次额外趣味测评
+      </p>
+
+      <div class="reward-card">
+        <h3>📝 领取步骤</h3>
+        <ol class="reward-steps">
+          <li>在<strong>小红书</strong>搜索「<strong>海蓝蓝蓝</strong>」并关注</li>
+          <li>找到这条测评相关的笔记，<strong>点赞 + 收藏</strong></li>
+          <li>在评论区留下你的测评结果（比如"成都巴适生活家！"）</li>
+          <li>添加下面的微信，发送你的<strong>点赞+收藏+关注+评论</strong>截图</li>
+          <li>我会免费送你一次额外的趣味测评！</li>
+        </ol>
+      </div>
+
+      <div class="reward-card">
+        <h3>💬 添加微信</h3>
+        <div class="wechat-card">
+          <div style="font-size:13px;color:var(--sub);">微信号</div>
+          <div class="wechat-id">${TOPIC.wechatId}</div>
+          <button class="btn btn-primary btn-sm" onclick="copyWechat()" style="margin-top:8px;background:var(--accent2);box-shadow:0 4px 16px rgba(91,140,90,0.3);">📋 复制微信号</button>
+          <div class="wechat-remark">
+            📌 添加备注：<strong>你的名称＋小红书测评网站</strong>
+          </div>
+          <div class="wechat-note">
+            微信里还会不定期发放其他免费测评福利哦～
+          </div>
+        </div>
+      </div>
+
+      <div class="reward-card">
+        <h3>😊 不参加也完全没关系</h3>
+        <p style="font-size:14px;line-height:1.7;color:var(--sub);">
+          你已经拥有了完整的测评报告和祝福。这份小福利只是额外的感谢，不参与互动不会影响你的任何结果。
+        </p>
+      </div>
+
+      <div class="reward-skip">
+        <button class="btn btn-primary btn-block" onclick="goToBlessing()">跳过，继续阅读祝福 →</button>
+      </div>
+    </div>
+  `;
+}
+
+function goToReward() {
+  $('rewardContent').innerHTML = renderReward();
+  showScreen('screenReward');
+}
+
+function copyWechat() {
+  navigator.clipboard.writeText(TOPIC.wechatId).then(() => {
+    showToast('微信号已复制：' + TOPIC.wechatId);
+  }).catch(() => {
+    showToast('复制失败，请手动复制');
+  });
+}
+
+// ==================== BLESSING PAGE ====================
+function renderBlessing() {
+  if (!state.result) {
+    showScreen('screenHome');
+    return;
+  }
+  const city = ARCHETYPES[state.result.cityKey];
+
+  const letter = `亲爱的你：
+
+很高兴陪你走完这趟小小的城市探索之旅。
+
+当你选择了一道又一道题的答案时，你其实也在回答一个更大的问题：我想要什么样的生活？有人说，选择一座城市就是选择一种活法。这句话只对了一半——城市是土壤，但你才是那颗要发芽的种子。土壤再肥沃，如果你是仙人掌，你也不会喜欢热带雨林；环境再好，如果那不是你想要的节奏，你也不会快乐。
+
+${city.blessing}
+
+我知道你可能现在正站在某个十字路口——要不要去大城市闯一闯？要不要回家乡过安稳日子？要不要为了梦想换一座城市？这些问题没有标准答案。这份测评也不会告诉你"你必须去哪里"。它只是帮你更清楚地看见：你内心的声音是什么样的，你真正在意的是什么，什么样的环境会让你觉得"活着真好"。
+
+不要急着做决定。好的决定往往不是"想"出来的，是"活"出来的。如果可以，去你心动的城市住一段时间，不是旅游那种住，是像当地人一样住一住——去菜市场买菜、坐早晚高峰的地铁、在小区楼下散步、和便利店的店员打招呼。城市适不适合你，你的身体会先知道。
+
+也不要觉得"选择了一座城市就是一辈子"。人生很长，你可以在不同的阶段住在不同的地方。二十岁在大城市奋斗，三十岁去小城慢下来，四十岁找个山清水秀的地方定居，都可以。人生不是一道单选题，是一篇可以不断修改的散文。
+
+最后，不管你最终在哪里，愿你都有勇气追求你想要的生活，也有气度接纳生活给你的一切。愿你脚下有土地，身边有爱人，心里有光。
+
+愿你在属于你的城市里，活得像你自己。
+
+蓝蓝
+陪你探索自己的朋友`;
+
+  let html = `
+    <div class="blessing-page">
+      <div class="blessing-lanlan">${LANLAN_SVG}</div>
+      <h2 class="blessing-title">给你的一封信 💌</h2>
+      <div class="blessing-letter">
+        ${letter.split('\n\n').map(p => `<p>${p.replace(/\n/g,'<br>')}</p>`).join('')}
+        <div class="blessing-signature">—— 蓝蓝</div>
+      </div>
+      <div class="blessing-actions">
+        <button class="btn btn-primary btn-sm" onclick="copyBlessing()">📋 复制祝福</button>
+        <button class="btn btn-secondary btn-sm" onclick="showScreen('screenReport')">← 返回报告</button>
+      </div>
+      <div class="blessing-actions">
+        <button class="btn btn-ghost btn-sm" onclick="retakeQuiz()">🔄 再测一次</button>
+        <button class="btn btn-ghost btn-sm" onclick="showScreen('screenHome')">🏠 回到首页</button>
+      </div>
+      <p style="font-size:12px;color:var(--sub);opacity:0.6;margin-top:20px;">小红书：海蓝蓝蓝</p>
+    </div>
+  `;
+
+  $('blessingContent').innerHTML = html;
+  showScreen('screenBlessing');
+}
+
+function goToBlessing() {
+  renderBlessing();
+}
+
+function copyBlessing() {
+  if (!state.result) return;
+  const city = ARCHETYPES[state.result.cityKey];
+  const text = `给${city.name}·${city.tagline}的你的一封信：
+
+${city.blessing}
+
+不管你最终在哪里，愿你都有勇气追求你想要的生活，也有气度接纳生活给你的一切。愿你脚下有土地，身边有爱人，心里有光。
+
+愿你在属于你的城市里，活得像你自己。
+
+—— 来自「海蓝蓝蓝」的祝福`;
+
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('祝福已复制');
   }).catch(() => {
     showToast('复制失败，请手动选择');
   });
 }
 
 // ==================== INIT ====================
+loadState();
 
-showScreen('screenStart');
+// Check if there's an existing result
+if (state.result) {
+  // Stay on home, user can choose to retake or view
+}
+
+showScreen('screenHome');
 </script>
 </body>
 </html>
